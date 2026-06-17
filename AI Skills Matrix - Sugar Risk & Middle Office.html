@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Skills Matrix — Sugar Risk & Middle Office</title>
+<style>
+  :root {
+    --green-50:  #F1F7E8;
+    --green-100: #E0EFCB;
+    --green-200: #C0DD97;
+    --green-300: #97C459;
+    --green-400: #639922;
+    --green-500: #4A7D17;
+    --green-600: #3B6D11;
+    --green-700: #2D540C;
+    --green-800: #1F3D08;
+    --green-900: #0F2104;
+
+    --bg:        #FAFAF7;
+    --surface:   #FFFFFF;
+    --ink:       #1A1F17;
+    --ink-soft:  #5A5F55;
+    --ink-faint: #8B8F85;
+    --line:      #E5E7DD;
+    --line-soft: #F0F2EC;
+    --warn:      #B45309;
+    --warn-bg:   #FEF3C7;
+
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'URW Palladio L', Georgia, serif;
+    --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 40px 96px;
+  }
+
+  /* -------- HEADER -------- */
+  .masthead {
+    border-top: 6px solid var(--green-600);
+    padding-top: 28px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-600);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  h1.title {
+    font-family: var(--serif);
+    font-size: 44px;
+    line-height: 1.05;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  h1.title em { font-style: italic; color: var(--green-700); }
+  .lede { font-size: 16px; color: var(--ink-soft); max-width: 640px; }
+  .source-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    min-width: 240px;
+  }
+  .source-card strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+  }
+  .source-card a {
+    color: var(--green-600);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--green-300);
+  }
+
+  /* -------- SECTION NAV -------- */
+  .section-nav {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    margin-bottom: 56px;
+    z-index: 50;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .section-nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .section-nav a:hover, .section-nav a.active {
+    color: var(--green-700);
+    background: var(--green-50);
+  }
+
+  /* -------- SECTIONS -------- */
+  section { margin-bottom: 80px; scroll-margin-top: 80px; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green-600);
+    letter-spacing: 0.1em;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .section-intro { color: var(--ink-soft); margin-bottom: 32px; max-width: 800px; }
+
+  /* -------- TIER GRID -------- */
+  .tier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tier-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .tier-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .tier-card.t1::before { background: var(--green-100); }
+  .tier-card.t2::before { background: var(--green-200); }
+  .tier-card.t3::before { background: var(--green-300); }
+  .tier-card.t4::before { background: var(--green-500); }
+  .tier-card.t5::before { background: var(--green-700); }
+  .tier-code { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 4px; }
+  .tier-label { font-family: var(--serif); font-size: 19px; font-weight: 500; color: var(--ink); margin-bottom: 14px; line-height: 1.15; }
+  .tier-section { margin-bottom: 12px; }
+  .tier-section-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; font-weight: 500; }
+  .tier-section-text { font-size: 13px; line-height: 1.5; color: var(--ink); }
+
+  /* -------- SKILLS GRID -------- */
+  .cat-block { margin-bottom: 30px; }
+  .cat-head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;
+  }
+  .cat-code {
+    font-family: var(--mono); font-size: 12px; background: var(--green-700);
+    color: #fff; padding: 4px 9px; border-radius: 4px; font-weight: 500; letter-spacing: 0.04em;
+  }
+  .cat-name { font-family: var(--serif); font-size: 20px; font-weight: 500; color: var(--ink); }
+  .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .skill-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+  .skill-card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line-soft); }
+  .skill-code {
+    font-family: var(--mono); font-size: 11px; background: var(--green-50);
+    color: var(--green-700); padding: 3px 7px; border-radius: 4px; font-weight: 500; letter-spacing: 0.04em;
+  }
+  .skill-name { font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--ink); flex: 1; }
+  .skill-def { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 8px; }
+  .skill-res { font-size: 12px; padding-top: 8px; border-top: 1px solid var(--line-soft); }
+  .skill-res a { color: var(--green-600); text-decoration: none; border-bottom: 1px dotted var(--green-300); margin-right: 12px; display: inline-block; margin-bottom: 2px; }
+
+  /* -------- MATRIX -------- */
+  .matrix-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .matrix-scroll { overflow-x: auto; }
+  table.matrix { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1040px; }
+  table.matrix th, table.matrix td { text-align: center; padding: 9px 5px; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+  table.matrix th:last-child, table.matrix td:last-child { border-right: none; }
+  table.matrix thead th {
+    background: var(--green-700); color: white; font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.04em; font-weight: 500; padding: 12px 5px;
+    text-transform: uppercase; position: sticky; top: 0; border-right: 1px solid var(--green-600);
+  }
+  table.matrix thead th.role-col { text-align: left; padding-left: 18px; min-width: 210px; }
+  table.matrix thead th.tier-col { min-width: 46px; }
+  table.matrix thead th.skill-col { cursor: help; position: relative; min-width: 44px; }
+  table.matrix thead th.skill-col .tip {
+    position: absolute; top: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: var(--ink); color: white; padding: 8px 12px; border-radius: 6px;
+    font-family: var(--sans); font-size: 12px; font-weight: 400; letter-spacing: 0;
+    text-transform: none; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  table.matrix thead th.skill-col .tip::before {
+    content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent; border-bottom-color: var(--ink);
+  }
+  table.matrix thead th.skill-col:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+  table.matrix tbody td.role-col { text-align: left; padding-left: 18px; color: var(--ink); }
+  table.matrix tbody td.role-col small { display:block; color: var(--ink-faint); font-size: 11px; }
+  table.matrix tr.fn-row td {
+    background: var(--green-50); color: var(--green-800); font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; text-align: left;
+    padding: 8px 18px; font-weight: 500; border-right: none;
+  }
+  table.matrix tr:hover td.role-col { background: var(--green-50); }
+  .tier-pill { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 7px; border-radius: 3px; letter-spacing: 0.04em; }
+  .tier-pill.t1 { background: #F5F4ED; color: var(--ink-soft); }
+  .tier-pill.t2 { background: var(--green-50); color: var(--green-700); }
+  .tier-pill.t3 { background: var(--green-100); color: var(--green-800); }
+  .tier-pill.t4 { background: var(--green-300); color: var(--green-900); }
+  .tier-pill.t5 { background: var(--green-700); color: white; }
+  .lvl { font-family: var(--mono); font-weight: 500; font-size: 13px; }
+  .lvl-0 { color: var(--ink-faint); }
+  .lvl-1 { background: var(--green-50);  color: var(--green-700); }
+  .lvl-2 { background: var(--green-100); color: var(--green-800); }
+  .lvl-3 { background: var(--green-300); color: var(--green-900); }
+  .lvl-4 { background: var(--green-600); color: white; }
+  .matrix-legend {
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 16px;
+    padding: 14px 18px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 6px; font-size: 12px; color: var(--ink-soft);
+  }
+  .legend-group { display: flex; align-items: center; gap: 8px; }
+  .legend-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
+  .legend-swatch { display: inline-block; width: 22px; height: 22px; border-radius: 3px; font-family: var(--mono); font-size: 11px; font-weight: 500; text-align: center; line-height: 22px; }
+
+  /* -------- SELF-ASSESSMENT -------- */
+  .assess { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 28px 32px; }
+  .assess-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .field-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); display: block; margin-bottom: 6px; font-weight: 500; }
+  .field input, .field select {
+    width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px;
+    font-family: var(--sans); font-size: 14px; color: var(--ink); background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--green-400); box-shadow: 0 0 0 3px var(--green-50); }
+  .role-summary { display: none; background: var(--green-50); border-radius: 6px; padding: 14px 18px; margin-bottom: 22px; font-size: 13px; color: var(--green-800); line-height: 1.5; }
+  .role-summary.shown { display: block; }
+  .role-summary strong { color: var(--green-900); font-weight: 500; }
+  .role-summary .meta { display: inline-flex; align-items: center; gap: 10px; margin-right: 16px; }
+  table.assess-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.assess-table th { text-align: left; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); padding: 8px 8px; border-bottom: 1px solid var(--line); font-weight: 500; }
+  table.assess-table th.center { text-align: center; }
+  table.assess-table td { padding: 9px 8px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+  table.assess-table td.center { text-align: center; }
+  table.assess-table tr.cat-row td {
+    background: var(--green-50); color: var(--green-800); font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; padding: 7px 8px;
+  }
+  .skill-cell { display: flex; flex-direction: column; gap: 2px; }
+  .skill-cell-name { color: var(--ink); }
+  .skill-cell-res a { font-family: var(--mono); font-size: 10px; color: var(--green-600); text-decoration: none; border-bottom: 1px dotted var(--green-300); }
+  .req-badge { display: inline-block; font-family: var(--mono); font-weight: 500; font-size: 13px; width: 30px; height: 30px; line-height: 30px; border-radius: 4px; text-align: center; }
+  .level-input { width: 56px; text-align: center; border: 1px solid var(--line); border-radius: 4px; padding: 7px 0; font-family: var(--mono); font-size: 13px; background: var(--surface); transition: all 0.15s; }
+  .level-input:focus { outline: none; border-color: var(--green-400); box-shadow: 0 0 0 3px var(--green-50); }
+  .gap-cell { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+  .gap-pos { color: var(--green-600); }
+  .gap-neg { color: var(--warn); }
+  .gap-zero { color: var(--ink-soft); }
+  .gap-pos::before { content: '+'; }
+  .want-box { width: 18px; height: 18px; accent-color: var(--green-600); cursor: pointer; }
+  .gap-summary { margin-top: 22px; padding: 18px 22px; background: var(--green-50); border-radius: 8px; border-left: 3px solid var(--green-500); display: none; }
+  .gap-summary.shown { display: block; }
+  .gap-summary h4 { font-family: var(--serif); font-size: 16px; font-weight: 500; margin-bottom: 10px; color: var(--green-900); }
+  .gap-summary .stat { display: inline-block; margin-right: 28px; font-size: 13px; color: var(--green-800); }
+  .gap-summary .stat strong { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--green-900); margin-right: 4px; }
+  .gap-summary .priorities { margin-top: 14px; font-size: 13px; color: var(--green-900); }
+  .gap-summary .priorities ul { margin: 6px 0 0 18px; }
+  .btn { font-family: var(--sans); font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: 6px; border: 1px solid var(--green-600); background: var(--green-600); color: #fff; cursor: pointer; margin-top: 18px; transition: background 0.15s; }
+  .btn:hover { background: var(--green-700); }
+  .btn.secondary { background: #fff; color: var(--green-700); margin-left: 8px; }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--ink-faint); font-style: italic; }
+
+  /* -------- MATRIX EDIT BAR -------- */
+  .edit-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .edit-bar .btn { margin-top: 0; margin-left: 0; }
+  .save-status { font-family: var(--mono); font-size: 11px; color: var(--green-600); margin-left: 4px; }
+  .save-status.warn { color: var(--warn); }
+  .mlvl-input { width: 44px; text-align: center; border: 1px solid var(--green-300); border-radius: 4px; padding: 5px 0; font-family: var(--mono); font-size: 13px; font-weight: 500; background: var(--surface); }
+  .mlvl-input:focus { outline: none; box-shadow: 0 0 0 3px var(--green-50); border-color: var(--green-500); }
+  table.matrix.editing td.lvl { padding: 5px 4px; }
+  .edit-hint { font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
+  .matrix-subhead { font-family: var(--serif); font-size: 19px; font-weight: 500; margin: 4px 0 6px; color: var(--ink); }
+
+  /* -------- LEARNING PATHS -------- */
+  .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .path-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; border-top: 3px solid var(--green-400); }
+  .path-card h3 { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .path-card .who { font-family: var(--mono); font-size: 11px; color: var(--green-600); letter-spacing: 0.06em; margin-bottom: 12px; text-transform: uppercase; }
+  .path-card ol { margin-left: 18px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+  .path-card ol li { margin-bottom: 6px; }
+  .path-card ol li b { color: var(--ink); font-weight: 500; }
+
+  /* -------- RESOURCES -------- */
+  .res-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .res-table th { background: var(--green-700); color: #fff; text-align: left; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 11px 14px; font-weight: 500; }
+  .res-table td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  .res-table tr:last-child td { border-bottom: none; }
+  .res-table .cat { font-family: var(--mono); font-size: 11px; color: var(--green-700); font-weight: 500; white-space: nowrap; }
+  .res-table a { color: var(--green-600); text-decoration: none; border-bottom: 1px dotted var(--green-300); }
+  .res-table .type { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* -------- TRAINING IDEAS -------- */
+  .train-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .train-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+  .train-card .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-600); margin-bottom: 6px; }
+  .train-card h3 { font-family: var(--serif); font-size: 17px; font-weight: 500; margin-bottom: 8px; }
+  .train-card p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+
+  .caveat { margin-top: 32px; padding: 16px 20px; background: var(--warn-bg); border-radius: 6px; font-size: 13px; color: #78350F; line-height: 1.55; }
+  .caveat strong { display: block; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; color: var(--warn); }
+
+  footer { margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer a { color: var(--green-600); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .page { padding: 32px 20px 64px; }
+    .masthead { grid-template-columns: 1fr; }
+    h1.title { font-size: 32px; }
+    .tier-grid, .skills-grid, .path-grid, .train-grid { grid-template-columns: 1fr; }
+    .assess-controls { grid-template-columns: 1fr; }
+  }
+  @media print {
+    .section-nav { display: none; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ==================== MASTHEAD ==================== -->
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">Sugar Risk &amp; Middle Office · AI Capability Programme</div>
+      <h1 class="title">AI Skills Matrix<br><em>for the sugar risk &amp; middle office team</em></h1>
+      <p class="lede">A practical, use-case-based map of the AI skills our team needs — from drafting an email with GenAI to building an agent that knows our desk. Pick your name, score yourself, see your gaps, and get a curated learning path to close them.</p>
+    </div>
+    <aside class="source-card">
+      <strong>How to use this</strong>
+      1 · Read the tiers &amp; skills.<br>
+      2 · Go to <a href="#assess">Self-assessment</a>, pick your name.<br>
+      3 · Score 0–4 &amp; tick what you want to learn.<br>
+      4 · Follow your <a href="#paths">learning path</a>.
+    </aside>
+  </header>
+
+  <!-- ==================== NAV ==================== -->
+  <nav class="section-nav" id="nav">
+    <a href="#tiers">01 · Tiers</a>
+    <a href="#skills">02 · Skills</a>
+    <a href="#matrix">03 · Target Matrix</a>
+    <a href="#assess">04 · Self-Assessment</a>
+    <a href="#paths">05 · Learning Paths</a>
+    <a href="#resources">06 · Resources</a>
+    <a href="#training">07 · Internal Training</a>
+  </nav>
+
+  <!-- ==================== TIERS ==================== -->
+  <section id="tiers">
+    <div class="section-header"><span class="section-num">01</span><h2>AI capability tiers</h2></div>
+    <p class="section-intro">Four tiers describe how deeply a person works with AI. The current target for everyone is Tier 3 (AI Power User). Tier 4 (AI Champion) is an opt-in stretch goal we'll ask about later. Your tier is a guide, not a grade.</p>
+    <div class="tier-grid" id="tier-grid"></div>
+  </section>
+
+  <!-- ==================== SKILLS ==================== -->
+  <section id="skills">
+    <div class="section-header"><span class="section-num">02</span><h2>The skills, by category</h2></div>
+    <p class="section-intro">Twenty concrete AI skills grouped into six categories. Each is a real thing you can do at your desk — not theory. We mainly use Claude and Copilot, so most skills list a route for both. Hover the matrix later to see codes.</p>
+    <div id="skills-by-cat"></div>
+  </section>
+
+  <!-- ==================== MATRIX ==================== -->
+  <section id="matrix">
+    <div class="section-header"><span class="section-num">03</span><h2>Target matrices</h2></div>
+
+    <h3 class="matrix-subhead">Tier qualification — minimum level on each skill to reach each tier</h3>
+    <p class="section-intro" style="max-width:840px">To qualify for a tier you need at least these levels across the skills; each higher tier builds on the ones below it. Tier 3 (AI Power User) is the current team target, and Tier 4 (AI Champion) is the opt-in stretch goal. Hover a skill code for its name.</p>
+    <div class="matrix-wrap" style="margin-bottom:30px"><div class="matrix-scroll"><table class="matrix" id="tier-matrix-table"></table></div></div>
+
+    <h3 class="matrix-subhead">Individual targets — by person</h3>
+    <p class="section-intro">Each cell is the <strong>target level</strong> for that person and skill, based on their role. Levels run 0–4 (4 = Coach); right now nobody is targeted above 3. These are targets to aim for, not current ability — that comes from the self-assessment.</p>
+    <div class="edit-bar">
+      <button class="btn" id="edit-toggle">✎ Edit targets</button>
+      <button class="btn secondary" id="export-targets">Export backup</button>
+      <label class="btn secondary" for="import-targets" style="cursor:pointer;display:inline-block">Import backup</label>
+      <input type="file" id="import-targets" accept="application/json,.json" style="display:none">
+      <button class="btn secondary" id="reset-targets">Reset to defaults</button>
+      <span class="save-status" id="save-status"></span>
+    </div>
+    <p class="edit-hint" id="edit-hint" style="display:none">Click any cell and type a number 0–4. Changes save to this browser automatically. Use <strong>Export backup</strong> to keep a copy or move your edits to another computer.</p>
+    <div class="matrix-wrap"><div class="matrix-scroll"><table class="matrix" id="matrix-table"></table></div></div>
+    <div class="matrix-legend">
+      <div class="legend-group">
+        <span class="legend-label">Level</span>
+        <span class="legend-swatch lvl lvl-0">0</span>
+        <span class="legend-swatch lvl lvl-1">1</span>
+        <span class="legend-swatch lvl lvl-2">2</span>
+        <span class="legend-swatch lvl lvl-3">3</span>
+        <span class="legend-swatch lvl lvl-4">4</span>
+      </div>
+      <div class="legend-group"><span class="legend-label">0 None · 1 Aware · 2 Guided · 3 Independent · 4 Coach</span></div>
+    </div>
+  </section>
+
+  <!-- ==================== ASSESS ==================== -->
+  <section id="assess">
+    <div class="section-header"><span class="section-num">04</span><h2>Your self-assessment &amp; gap analysis</h2></div>
+    <p class="section-intro">Pick your name to load your targets. For each skill, enter your <strong>current level (0–4)</strong> and tick <strong>"want to learn"</strong> for anything you'd like to develop. Gaps and priorities calculate automatically. Click <strong>Save development plan</strong> to download an Excel you can share.</p>
+    <div class="assess">
+      <div class="assess-controls">
+        <div class="field">
+          <label class="field-label" for="assess-person">Your name</label>
+          <select id="assess-person"><option value="">— Select your name —</option></select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="assess-date">Date</label>
+          <input type="text" id="assess-date" placeholder="e.g. 16 Jun 2026">
+        </div>
+      </div>
+      <div class="role-summary" id="role-summary"></div>
+      <div id="assess-table-wrap"><div class="empty-state">Select your name above to begin.</div></div>
+      <div class="gap-summary" id="gap-summary"></div>
+      <div id="assess-actions" style="display:none;">
+        <button class="btn" onclick="downloadPlan()">⬇ Save development plan (Excel)</button>
+        <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
+        <button class="btn secondary" onclick="resetAssess()">Reset scores</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== LEARNING PATHS ==================== -->
+  <section id="paths">
+    <div class="section-header"><span class="section-num">05</span><h2>Learning paths</h2></div>
+    <p class="section-intro">Three staged paths. Start at Foundation (everyone), then move to the path that matches your role. Each step links to a resource in the table below.</p>
+    <div class="path-grid" id="path-grid"></div>
+  </section>
+
+  <!-- ==================== RESOURCES ==================== -->
+  <section id="resources">
+    <div class="section-header"><span class="section-num">06</span><h2>Curated resources</h2></div>
+    <p class="section-intro">Hand-picked, current videos and guides — free YouTube plus official Microsoft and Claude docs. Since we mainly use Claude and Copilot, each category lists resources for both. Start with the one marked <strong>★ start here</strong>.</p>
+    <table class="res-table" id="res-table"></table>
+    <div class="caveat" id="data-rules"><strong>Our AI data safety rules (skill A4)</strong>
+      <ol style="margin:6px 0 0 18px;line-height:1.7">
+        <li>Always use a company-approved AI tool.</li>
+        <li>Never share sensitive personal information with any AI.</li>
+        <li>Only share company information with our approved enterprise tools — Microsoft Copilot (Basic / 365), ChatGPT Enterprise, or Claude Team. Never with free or personal AI accounts.</li>
+        <li>Where you can, anonymise the data first (take out names, prices, counterparties).</li>
+        <li>AI sometimes “hallucinates” — it makes things up. Always check anything important. Don’t trust it blindly.</li>
+      </ol></div>
+  </section>
+
+  <!-- ==================== TRAINING ==================== -->
+  <section id="training">
+    <div class="section-header"><span class="section-num">07</span><h2>Internal training ideas</h2></div>
+    <p class="section-intro">Short, hands-on sessions tailored to our sugar trading workflows. Run them as 45–60 min lunch-and-learns; each ends with everyone shipping one small thing.</p>
+    <div class="train-grid" id="train-grid"></div>
+  </section>
+
+  <footer>
+    <span>AI Skills Matrix · Sugar Risk &amp; Middle Office · prepared for team upskilling</span>
+    <span>Levels 0–4 · Resources verified Jun 2026</span>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// =========== TIERS ===========
+const TIERS = [
+  {code:'T1', label:'AI Aware', who:'Anyone new to AI tools.',
+   what:'Knows what GenAI can and cannot do. Uses approved tools for the odd draft or summary. Follows data-handling rules. Spots when AI is making things up.'},
+  {code:'T2', label:'AI User', who:'The baseline everyone on the team should reach.',
+   what:'Uses AI daily — drafting emails, summarising reports, asking questions of documents. Writes decent prompts and checks the answers against what they know.'},
+  {code:'T3', label:'AI Power User', who:'Current target for everyone on the team.',
+   what:'Uses AI to analyse data in Excel, extract data from PDFs, and speed up recurring work. Comfortable with a company-knowledge assistant and basic Python/VBA via AI.'},
+  {code:'T4', label:'AI Champion', who:'Opt-in — we\'ll ask who wants this later.',
+   what:'Builds automations and agents others use, helps the team level up, and helps set how we use AI safely. A stretch goal beyond the current Tier 3 target.'}
+];
+
+// =========== CATEGORIES & SKILLS ===========
+// res: starter resource shown on the skill card and in self-assessment
+const CATS = [
+  {code:'A', name:'Everyday GenAI (foundations)', skills:[
+    {code:'A1', name:'Draft & polish emails / messages', def:'Use Claude or Copilot to draft, rewrite, shorten or change the tone of emails, chat messages and notes.', res:{label:'Copilot beginner guide', url:'https://www.youtube.com/watch?v=JbOJliF-Cn4'}, res2:{label:'Get started with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}},
+    {code:'A2', name:'Summarise docs, reports & meetings', def:'Turn long reports, transcripts and email threads into a clean summary or action list with Claude or Copilot.', res:{label:'Copilot: get started', url:'https://support.microsoft.com/en-us/topic/copilot-tutorial-start-using-copilot-fe837774-3f6b-4885-850d-01f0e428898c'}, res2:{label:'Getting started with Claude.ai', url:'https://support.claude.com/en/articles/12997377-getting-started-with-claude-ai'}},
+    {code:'A3', name:'Effective prompting & checking output', def:'Write clear prompts that get useful answers, and sanity-check what the AI gives back before using it.', res:{label:'Prompting tutorial', url:'https://www.youtube.com/watch?v=_ZvnD73m40o'}, res2:{label:'Anthropic prompting guide', url:'https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview'}},
+    {code:'A4', name:'AI data security & policy', def:'Use AI safely: always use a company-approved tool, never share sensitive personal data, only put company data into approved enterprise tools, anonymise where you can, and never trust AI output blindly — it can make things up.', res:{label:'Read our AI data safety rules', url:'#data-rules'}},
+    {code:'A5', name:'Market & news research', def:'Use AI to research and summarise market drivers — sugar fundamentals, weather, prices and news — into a quick brief.', res:{label:'Copilot Researcher agent', url:'https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot'}, res2:{label:'Research with Claude', url:'https://support.claude.com/en/articles/12997377-getting-started-with-claude-ai'}},
+    {code:'A6', name:'Create slides & management reports', def:'Draft management reports and build slide decks with AI — Copilot in PowerPoint/Word, or draft in Claude then refine.', res:{label:'Create a presentation with Copilot', url:'https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d'}, res2:{label:'Draft reports with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}}
+  ]},
+  {code:'B', name:'Inbox & document automation', skills:[
+    {code:'B1', name:'Automate email triage & processing', def:'Use AI to sort, summarise, flag and act on incoming email — Copilot in Outlook, or Claude/Cowork with an email connector.', res:{label:'Triage email with Copilot in Outlook', url:'https://support.microsoft.com/en-us/office/triage-email-with-microsoft-365-copilot-in-outlook-85932469-7c3f-4a6a-acdb-adf0f3ebc169'}, res2:{label:'Connect Claude to your tools', url:'https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities'}},
+    {code:'B2', name:'Auto daily morning summary', def:'A scheduled summary each morning — overnight emails, news or position changes — via Copilot scheduled prompts or a Claude/Cowork scheduled task.', res:{label:'Schedule Copilot prompts (daily summary)', url:'https://support.microsoft.com/en-us/topic/schedule-copilot-prompts-29dfd5fb-211a-4515-88a6-730b8074e489'}, res2:{label:'Get started with Claude Cowork', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'}},
+    {code:'B3', name:'Auto-save attachments to SharePoint', def:'Automatically file email attachments into the right SharePoint/OneDrive library — Power Automate, or Claude/Cowork with a connector.', res:{label:'Save attachments (Power Automate)', url:'https://www.youtube.com/watch?v=_3BNmTsawAI'}, res2:{label:'Connect Claude to SharePoint/OneDrive', url:'https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities'}},
+    {code:'B4', name:'Extract data from PDFs / contracts', def:'Pull figures and terms out of confirmations, contracts and scanned PDFs — upload a PDF to Claude, or use Copilot in Excel.', res:{label:'Claude: read & extract from PDFs', url:'https://docs.claude.com/en/docs/build-with-claude/pdf-support'}, res2:{label:'Copilot in Excel (reads PDFs)', url:'https://support.microsoft.com/en-us/office/get-started-with-copilot-in-excel-d7110502-0334-4b4f-a175-a73abdfc118a'}}
+  ]},
+  {code:'C', name:'Knowledge assistants & agents', skills:[
+    {code:'C1', name:'Use a company-knowledge assistant', def:'Chat with an assistant that has read our docs/policies and answers grounded in them — a Claude Project, or Copilot grounded in your files.', res:{label:'Copilot: add knowledge sources', url:'https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder-add-knowledge'}, res2:{label:'Claude Projects', url:'https://support.claude.com/en/articles/9517075-what-are-projects'}},
+    {code:'C2', name:'Build a desk-knowledge agent', def:'Create an assistant that knows your desk — procedures, definitions, FAQs — as a Copilot Studio agent or a shared Claude Project.', res:{label:'Copilot Studio: first agent', url:'https://learn.microsoft.com/en-us/shows/mastering-copilot-studio/create-first-agent-copilot-studio'}, res2:{label:'Create & manage Claude Projects', url:'https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects'}},
+    {code:'C3', name:'Connect AI to internal data & tools', def:'Wire AI up to internal data sources and tools so it can act, not just chat — Copilot connectors, or Claude connectors (MCP).', res:{label:'Copilot Agent Academy', url:'https://microsoft.github.io/agent-academy/'}, res2:{label:'Claude custom connectors (MCP)', url:'https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp'}}
+  ]},
+  {code:'D', name:'Data & analytics with AI', skills:[
+    {code:'D1', name:'GenAI inside Excel', def:'Build formulas, clean and reshape data, make pivots and charts, and explain data from plain English — Copilot in Excel or Claude for Excel.', res:{label:'Copilot in Excel (2025)', url:'https://www.youtube.com/watch?v=z8L2w5utx-M'}, res2:{label:'Use Claude for Excel', url:'https://support.claude.com/en/articles/12650343-use-claude-for-excel'}},
+    {code:'D2', name:'Regression & stats with AI help', def:'Run and interpret regressions and basic statistics, using AI to set up and explain the analysis.', res:{label:'Regression, clearly explained (StatQuest)', url:'https://www.youtube.com/watch?v=nk2CQITm_eo'}, res2:{label:'Claude analysis tool', url:'https://www.anthropic.com/news/analysis-tool'}},
+    {code:'D3', name:'AI-augmented risk / PnL dashboards', def:'Build dashboards where you can ask questions in plain English and get auto-summaries of exposure and P&L — Copilot, or a Claude artifact.', res:{label:'Excel + Copilot course', url:'https://www.linkedin.com/learning/excel-with-copilot-ai-driven-data-analysis/'}, res2:{label:'Build a dashboard as a Claude artifact', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'}}
+  ]},
+  {code:'E', name:'Coding with AI', skills:[
+    {code:'E1', name:'Write & debug VBA macros with AI', def:'Use AI to generate, fix and explain Excel VBA macros — ask Claude, or use Copilot / ChatGPT.', res:{label:'AI → VBA tutorial', url:'https://www.youtube.com/watch?v=8nqjmn4ZNWI'}, res2:{label:'Get started with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}},
+    {code:'E2', name:'Write Python scripts with AI', def:'Get AI to write and explain Python for data pulls, calculations and small automations — Claude/Cowork can also run it for you.', res:{label:'Python for data (freeCodeCamp)', url:'https://www.youtube.com/watch?v=r-uOLxNrNk8'}, res2:{label:'Claude Cowork (writes & runs Python)', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'}}
+  ]},
+  {code:'F', name:'Building apps & interfaces', skills:[
+    {code:'F1', name:'Build & share an artifact in Claude', def:'Build a working interactive page, tool or visual in Claude (like this matrix) and share it via a link. Copilot and ChatGPT can also generate the HTML code, but Claude renders a live, shareable app.', res:{label:'Claude Artifacts — video walkthrough', url:'https://www.youtube.com/watch?v=9YGg4JaVN4w'}, res2:{label:'Publish & share Claude artifacts', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'}},
+    {code:'F2', name:'Build internal tools & dashboards', def:'Spin up a small internal tool or dashboard with AI — a Claude artifact, or a low-code app via Copilot Studio / Power Apps.', res:{label:'Microsoft Copilot Studio', url:'https://learn.microsoft.com/en-us/microsoft-copilot-studio/'}, res2:{label:'Build it as a Claude artifact', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'}}
+  ]}
+];
+
+// Flatten skills in order
+const SKILLS = [];
+CATS.forEach(c => c.skills.forEach(s => SKILLS.push({...s, cat:c.code, catName:c.name})));
+const SKILL_KEYS = SKILLS.map(s => s.code);
+
+// =========== PEOPLE (targets in SKILL_KEYS order) ===========
+// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 C3 | D1 D2 D3 | E1 E2 | F1 F2  (20 skills)
+const PEOPLE = [
+  {fn:'MIDDLE OFFICE', name:'Chong Yean Mui', role:'Head of Middle Office', tier:'T3',
+   tgt:[3,3,3,3,2,3, 2,3,2,2, 3,2,2, 3,2,3, 1,1, 1,1]},
+  {fn:'MIDDLE OFFICE', name:'Lim Kai Shean', role:'Middle Office', tier:'T3',
+   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
+  {fn:'MIDDLE OFFICE', name:'Vishesh Kathuria', role:'Middle Office', tier:'T3',
+   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
+  {fn:'MIDDLE OFFICE', name:'Poh Wei Min', role:'Middle Office', tier:'T3',
+   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
+
+  {fn:'PnL', name:'Berilyn Chia Zi Hui', role:'PnL', tier:'T3',
+   tgt:[3,3,3,3,2,3, 3,3,3,3, 3,2,2, 3,3,3, 3,3, 1,2]},
+
+  {fn:'RAW SUGAR RISK', name:'Pang Siew Kim', role:'Raw Sugar Risk Head', tier:'T3',
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,3,2, 3,3,3, 2,2, 1,2]},
+  {fn:'RAW SUGAR RISK', name:'Clare Choo Chui Ling', role:'Raw Sugar Risk', tier:'T3',
+   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]},
+  {fn:'RAW SUGAR RISK', name:'JR Boholst Animas', role:'Raw Sugar Risk', tier:'T3',
+   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]},
+
+  {fn:'WHITE SUGAR RISK', name:'Sharin Poy Mei Ling', role:'White Sugar Risk Head', tier:'T3',
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,3,2, 3,3,3, 2,2, 1,2]},
+  {fn:'WHITE SUGAR RISK', name:'Ida Yeung Pui Yan', role:'White Sugar Risk', tier:'T3',
+   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]}
+];
+
+// =========== TARGET PERSISTENCE (saves edits in this browser) ===========
+const STORE_KEY = 'wilmarAISkillsTargets_v3';
+const DEFAULT_TGT = {};
+PEOPLE.forEach(p => DEFAULT_TGT[p.name] = p.tgt.slice());
+
+function clampLvl(v){ v = parseInt(v,10); if (isNaN(v)) return null; return Math.max(0, Math.min(4, v)); }
+
+function setSaveStatus(txt, warn){
+  const el = document.getElementById('save-status');
+  if (!el) return;
+  el.textContent = txt || '';
+  el.classList.toggle('warn', !!warn);
+}
+let saveTimer = null;
+function flashSaved(){
+  setSaveStatus('Saved ✓');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => setSaveStatus(editMode ? 'Editing — changes save automatically' : ''), 1600);
+}
+function loadTargets(){
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    PEOPLE.forEach(p => {
+      const arr = saved[p.name];
+      if (Array.isArray(arr) && arr.length === p.tgt.length)
+        p.tgt = arr.map(v => { const c = clampLvl(v); return c === null ? 0 : c; });
+    });
+  } catch(e) { /* storage unavailable — fall back to defaults */ }
+}
+function saveTargets(){
+  const obj = {};
+  PEOPLE.forEach(p => obj[p.name] = p.tgt.slice());
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); flashSaved(); }
+  catch(e) { setSaveStatus('⚠ Can’t save in this browser — use Export backup', true); }
+}
+function resetTargets(){
+  PEOPLE.forEach(p => p.tgt = DEFAULT_TGT[p.name].slice());
+  try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+  renderMatrix();
+  if (personSelect.value !== '') renderAssess(personSelect.value);
+  setSaveStatus('Reset to defaults ✓');
+}
+loadTargets();
+
+// =========== RESOURCES TABLE ===========
+const RESOURCES = [
+  {cat:'A · Foundations', items:[
+    {start:true, type:'YouTube', label:'Microsoft 365 Copilot Tutorial — Beginner’s Guide (2025)', url:'https://www.youtube.com/watch?v=JbOJliF-Cn4'},
+    {type:'Docs', label:'Copilot tutorial: start using Copilot (Microsoft)', url:'https://support.microsoft.com/en-us/topic/copilot-tutorial-start-using-copilot-fe837774-3f6b-4885-850d-01f0e428898c'},
+    {type:'YouTube', label:'Prompt Engineering Tutorial — Master ChatGPT & LLM Responses', url:'https://www.youtube.com/watch?v=_ZvnD73m40o'},
+    {type:'YouTube', label:'ChatGPT Prompt Engineering: Master Perfect Prompts', url:'https://www.youtube.com/watch?v=X-BYSuiKECw'},
+    {type:'Course', label:'ChatGPT Prompt Engineering for Developers (DeepLearning.AI, free)', url:'https://www.deeplearning.ai/courses/chatgpt-prompt-eng'},
+    {type:'Guide', label:'What work details are safe to use in AI tools (data security)', url:'https://security.utoronto.ca/is-advice/what-kinds-of-work-details-are-safe-to-use-in-ai-tools/'},
+    {type:'Docs', label:'Get started with Claude (Help Center)', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'},
+    {type:'Docs', label:'Copilot Researcher agent (market/news research)', url:'https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot'},
+    {type:'Docs', label:'Create a presentation with Copilot in PowerPoint', url:'https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d'}
+  ]},
+  {cat:'B · Inbox automation', items:[
+    {start:true, type:'Docs', label:'Triage email with Microsoft 365 Copilot in Outlook', url:'https://support.microsoft.com/en-us/office/triage-email-with-microsoft-365-copilot-in-outlook-85932469-7c3f-4a6a-acdb-adf0f3ebc169'},
+    {type:'Docs', label:'Schedule Copilot prompts — automatic daily summary', url:'https://support.microsoft.com/en-us/topic/schedule-copilot-prompts-29dfd5fb-211a-4515-88a6-730b8074e489'},
+    {type:'YouTube', label:'Automatically Save Email Attachments to SharePoint (Power Automate)', url:'https://www.youtube.com/watch?v=_3BNmTsawAI'},
+    {type:'Docs', label:'Claude: read & extract data from PDFs / contracts', url:'https://docs.claude.com/en/docs/build-with-claude/pdf-support'},
+    {type:'Docs', label:'Connect Claude to your tools (connectors)', url:'https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities'},
+    {type:'Docs', label:'Get started with Claude Cowork', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'},
+    {type:'Docs', label:'Copilot Studio — agent flows / workflows', url:'https://learn.microsoft.com/en-us/microsoft-copilot-studio/'}
+  ]},
+  {cat:'C · Agents', items:[
+    {start:true, type:'Course', label:'Copilot Studio Agent Academy (free, Microsoft)', url:'https://microsoft.github.io/agent-academy/'},
+    {type:'Video', label:'Create your first agent in Copilot Studio', url:'https://learn.microsoft.com/en-us/shows/mastering-copilot-studio/create-first-agent-copilot-studio'},
+    {type:'Docs', label:'Add knowledge sources to your agent (Microsoft Learn)', url:'https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder-add-knowledge'},
+    {type:'Docs', label:'Claude Projects — company knowledge', url:'https://support.claude.com/en/articles/9517075-what-are-projects'},
+    {type:'Docs', label:'Claude custom connectors (MCP)', url:'https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp'}
+  ]},
+  {cat:'D · Data & analytics', items:[
+    {start:true, type:'YouTube', label:'How to Use Copilot in Excel: Full Tutorial (2025)', url:'https://www.youtube.com/watch?v=z8L2w5utx-M'},
+    {type:'Docs', label:'Get started with Copilot in Excel (Microsoft)', url:'https://support.microsoft.com/en-us/office/get-started-with-copilot-in-excel-d7110502-0334-4b4f-a175-a73abdfc118a'},
+    {type:'YouTube', label:'Regression, Clearly Explained (StatQuest)', url:'https://www.youtube.com/watch?v=nk2CQITm_eo'},
+    {type:'Course', label:'Excel with Copilot: AI-Driven Data Analysis (LinkedIn Learning)', url:'https://www.linkedin.com/learning/excel-with-copilot-ai-driven-data-analysis/'},
+    {type:'Docs', label:'Use Claude for Excel', url:'https://support.claude.com/en/articles/12650343-use-claude-for-excel'}
+  ]},
+  {cat:'E · Coding with AI', items:[
+    {start:true, type:'YouTube', label:'ChatGPT Tutorial: How to use ChatGPT to Create VBA Scripts', url:'https://www.youtube.com/watch?v=8nqjmn4ZNWI'},
+    {type:'YouTube', label:'How to Make Macros in Excel Using AI (full guide)', url:'https://www.youtube.com/watch?v=585wknxgwwI'},
+    {type:'YouTube', label:'Data Analysis with Python — Full Course (freeCodeCamp)', url:'https://www.youtube.com/watch?v=r-uOLxNrNk8'},
+    {type:'Docs', label:'Claude Cowork — writes & runs code for you', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'}
+  ]},
+  {cat:'F · Building apps', items:[
+    {start:true, type:'YouTube', label:'Claude Artifacts — what they are & how to use them', url:'https://www.youtube.com/watch?v=9YGg4JaVN4w'},
+    {type:'Docs', label:'Publish & share Claude artifacts (Help Center)', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'},
+    {type:'Docs', label:'Microsoft Copilot Studio (low-code apps & agents)', url:'https://learn.microsoft.com/en-us/microsoft-copilot-studio/'}
+  ]}
+];
+
+// =========== LEARNING PATHS ===========
+const PATHS = [
+  {title:'Foundation', who:'Everyone — start here', steps:[
+    ['Daily drafting & summarising','Use Copilot/ChatGPT every day for a week to draft emails and summarise one report. (A1, A2)'],
+    ['Prompting that works','Watch the prompting tutorial; learn to give context, role and format. (A3)'],
+    ['Data safety','Learn what never goes into a public tool — positions, prices, counterparties. (A4)'],
+    ['Ask your documents','Try a company-knowledge assistant on a policy or procedure doc. (C1)']
+  ]},
+  {title:'Power User', who:'Risk analysts, middle office, PnL', steps:[
+    ['Copilot in Excel','Build formulas, clean data, pivots and charts from plain English. (D1)'],
+    ['Extract from PDFs','Pull figures from confirmations/contracts with AI. (B4)'],
+    ['Regression & stats','Run and interpret a regression with AI guidance. (D2)'],
+    ['VBA & Python with AI','Generate and debug a macro or script you actually use. (E1, E2)']
+  ]},
+  {title:'Automator / Builder', who:'Risk heads & strong analysts', steps:[
+    ['Morning summary flow','Build a scheduled summary of overnight email/news/positions. (B2)'],
+    ['Attachments → SharePoint','Automate filing email attachments into SharePoint. (B3)'],
+    ['Email triage','Auto-sort and flag the inbox so priorities surface. (B1)'],
+    ['Desk-knowledge agent','Stand up an agent that knows your desk and answers FAQs. (C2, C3)'],
+    ['Internal tool / dashboard','Build a small AI-augmented dashboard or tool. (D3, F1, F2)']
+  ]}
+];
+
+// =========== INTERNAL TRAINING IDEAS ===========
+const TRAINING = [
+  {tag:'45 min · everyone', title:'Lunch & learn: GenAI in your inbox', body:'Live demo of drafting, replying and summarising email threads. Everyone leaves having rewritten one real (sanitised) email and summarised one report.'},
+  {tag:'45 min · everyone', title:'Data safety clinic', body:'What is safe to paste where, using real sugar-desk examples. Agree a one-page team rule on positions, prices, counterparties and PII. Covers skill A4.'},
+  {tag:'60 min · analysts', title:'Copilot in Excel for risk & PnL', body:'Hands-on with a real (masked) exposure sheet: build formulas, pivots and a chart from plain English, then a regression on price vs. a driver.'},
+  {tag:'60 min · middle office', title:'Build a morning summary flow', body:'Everyone builds a Power Automate flow that emails them a summary of overnight messages, and one that files attachments to SharePoint.'},
+  {tag:'60 min · analysts', title:'PDF & contract data extraction', body:'Extract figures from confirmations and contracts; compare AI output to source and discuss where checking is essential.'},
+  {tag:'90 min · builders', title:'Build a desk-knowledge agent', body:'Using Copilot Studio + Agent Academy, point an agent at desk procedures/FAQs so the team can self-serve answers. One agent shipped per desk.'},
+  {tag:'60 min · analysts', title:'VBA & Python with AI', body:'Take a tedious recurring task and automate it: generate a VBA macro or Python script with AI, run it, fix the errors together.'},
+  {tag:'45 min · monthly', title:'AI show & tell', body:'Rotating 5-minute demos of one thing each person automated or learned that month. Keeps momentum and spreads the best use cases.'}
+];
+
+// =========== RENDER: TIERS ===========
+const tierGrid = document.getElementById('tier-grid');
+TIERS.forEach(t => {
+  const c = document.createElement('div');
+  c.className = `tier-card ${t.code.toLowerCase()}`;
+  c.innerHTML = `
+    <div class="tier-code">${t.code}</div>
+    <div class="tier-label">${t.label}</div>
+    <div class="tier-section"><div class="tier-section-label">Who</div><div class="tier-section-text">${t.who}</div></div>
+    <div class="tier-section" style="margin-bottom:0;margin-top:auto"><div class="tier-section-label">What they do</div><div class="tier-section-text">${t.what}</div></div>
+  `;
+  tierGrid.appendChild(c);
+});
+
+// =========== RENDER: SKILLS BY CATEGORY ===========
+const skillsByCat = document.getElementById('skills-by-cat');
+CATS.forEach(c => {
+  const block = document.createElement('div');
+  block.className = 'cat-block';
+  let inner = `<div class="cat-head"><span class="cat-code">${c.code}</span><span class="cat-name">${c.name}</span></div><div class="skills-grid">`;
+  c.skills.forEach(s => {
+    inner += `
+      <div class="skill-card">
+        <div class="skill-card-head"><span class="skill-code">${s.code}</span><span class="skill-name">${s.name}</span></div>
+        <div class="skill-def">${s.def}</div>
+        <div class="skill-res">→ <a href="${s.res.url}" target="_blank" rel="noopener">${s.res.label}</a>${s.res2 ? ` &nbsp;·&nbsp; <a href="${s.res2.url}" target="_blank" rel="noopener">${s.res2.label}</a>` : ''}</div>
+      </div>`;
+  });
+  inner += `</div>`;
+  block.innerHTML = inner;
+  skillsByCat.appendChild(block);
+});
+
+// =========== RENDER: MATRIX ===========
+const matrixTable = document.getElementById('matrix-table');
+let editMode = false;
+
+// Build header once
+(function buildMatrixHead(){
+  const thead = document.createElement('thead');
+  const headTr = document.createElement('tr');
+  headTr.innerHTML = `<th class="role-col">Person</th><th class="tier-col">Tier</th>`;
+  SKILLS.forEach(s => {
+    const th = document.createElement('th');
+    th.className = 'skill-col';
+    th.innerHTML = `${s.code}<span class="tip">${s.name}</span>`;
+    headTr.appendChild(th);
+  });
+  thead.appendChild(headTr);
+  matrixTable.appendChild(thead);
+})();
+
+const matrixBody = document.createElement('tbody');
+matrixTable.appendChild(matrixBody);
+
+function renderMatrix(){
+  matrixTable.classList.toggle('editing', editMode);
+  matrixBody.innerHTML = '';
+  let curFn = null;
+  PEOPLE.forEach((p, pi) => {
+    if (p.fn !== curFn) {
+      const fnRow = document.createElement('tr');
+      fnRow.className = 'fn-row';
+      const td = document.createElement('td');
+      td.colSpan = 2 + SKILLS.length;
+      td.textContent = p.fn;
+      fnRow.appendChild(td);
+      matrixBody.appendChild(fnRow);
+      curFn = p.fn;
+    }
+    const tr = document.createElement('tr');
+    let html = `<td class="role-col">${p.name}<small>${p.role}</small></td>`;
+    html += `<td><span class="tier-pill ${p.tier.toLowerCase()}">${p.tier}</span></td>`;
+    p.tgt.forEach((lvl, si) => {
+      if (editMode) {
+        html += `<td class="lvl"><input type="number" min="0" max="4" class="mlvl-input lvl-${lvl}" data-p="${pi}" data-s="${si}" value="${lvl}"></td>`;
+      } else {
+        html += `<td class="lvl lvl-${lvl}">${lvl}</td>`;
+      }
+    });
+    tr.innerHTML = html;
+    matrixBody.appendChild(tr);
+  });
+  if (editMode) {
+    matrixBody.querySelectorAll('.mlvl-input').forEach(inp => inp.addEventListener('input', onTargetEdit));
+  }
+}
+
+function onTargetEdit(e){
+  const inp = e.target;
+  const v = clampLvl(inp.value);
+  if (v === null) return;
+  inp.value = v;
+  const pi = +inp.dataset.p, si = +inp.dataset.s;
+  PEOPLE[pi].tgt[si] = v;
+  inp.className = 'mlvl-input lvl-' + v;
+  saveTargets();
+  // keep self-assessment in sync if this person is open, without wiping entered scores
+  if (personSelect.value !== '' && +personSelect.value === pi) {
+    const numInp = tableWrap.querySelector(`.level-input[data-idx="${si}"]`);
+    if (numInp) {
+      const badge = numInp.closest('tr').querySelector('.req-badge');
+      if (badge) { badge.className = 'req-badge lvl-' + v; badge.textContent = v; }
+      updateGaps(pi);
+    }
+  }
+}
+
+renderMatrix();
+
+// =========== RENDER: TIER QUALIFICATION MATRIX ===========
+// Minimum level (0–3) on each skill to qualify for each tier. Monotonic: each tier >= the one below.
+// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 C3 | D1 D2 D3 | E1 E2 | F1 F2
+const TIER_QUAL = [
+  {code:'T1', label:'AI Aware',      lvl:[1,1,1,2,1,1, 1,0,0,0, 1,0,0, 1,0,0, 0,0, 0,0]},
+  {code:'T2', label:'AI User',       lvl:[2,2,2,3,2,2, 2,1,1,2, 2,0,0, 2,1,1, 1,1, 1,0]},
+  {code:'T3', label:'AI Power User', lvl:[3,3,3,3,3,3, 3,2,2,3, 3,2,2, 3,2,2, 2,2, 2,1]},
+  {code:'T4', label:'AI Champion',   lvl:[3,3,3,3,3,3, 3,3,3,3, 3,3,3, 3,3,3, 3,3, 3,3]}
+];
+(function renderTierMatrix(){
+  const tbl = document.getElementById('tier-matrix-table');
+  if (!tbl) return;
+  const thead = document.createElement('thead');
+  const htr = document.createElement('tr');
+  htr.innerHTML = `<th class="role-col">Tier</th><th class="tier-col">Code</th>`;
+  SKILLS.forEach(s => {
+    const th = document.createElement('th');
+    th.className = 'skill-col';
+    th.innerHTML = `${s.code}<span class="tip">${s.name}</span>`;
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);
+  tbl.appendChild(thead);
+  const tb = document.createElement('tbody');
+  TIER_QUAL.forEach(t => {
+    const tr = document.createElement('tr');
+    let html = `<td class="role-col">${t.label}</td><td><span class="tier-pill ${t.code.toLowerCase()}">${t.code}</span></td>`;
+    t.lvl.forEach(v => { html += `<td class="lvl lvl-${v}">${v}</td>`; });
+    tr.innerHTML = html;
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);
+})();
+
+// ----- Edit-bar controls -----
+const editToggleBtn = document.getElementById('edit-toggle');
+const editHint = document.getElementById('edit-hint');
+editToggleBtn.addEventListener('click', () => {
+  editMode = !editMode;
+  editToggleBtn.textContent = editMode ? '✓ Done editing' : '✎ Edit targets';
+  editToggleBtn.classList.toggle('secondary', editMode);
+  editHint.style.display = editMode ? 'block' : 'none';
+  renderMatrix();
+  setSaveStatus(editMode ? 'Editing — changes save automatically' : '');
+});
+
+document.getElementById('export-targets').addEventListener('click', () => {
+  const obj = {};
+  PEOPLE.forEach(p => obj[p.name] = p.tgt.slice());
+  const payload = { app: 'AI Skills Matrix', version: 1, savedAt: new Date().toISOString(), targets: obj };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ai-skills-targets-backup.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(a.href);
+  setSaveStatus('Backup downloaded ✓');
+});
+
+document.getElementById('import-targets').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const t = data.targets || data;
+      let applied = 0;
+      PEOPLE.forEach(p => {
+        const arr = t[p.name];
+        if (Array.isArray(arr) && arr.length === p.tgt.length) {
+          p.tgt = arr.map(v => { const c = clampLvl(v); return c === null ? 0 : c; });
+          applied++;
+        }
+      });
+      if (applied === 0) { setSaveStatus('⚠ No matching names in file', true); return; }
+      saveTargets();
+      renderMatrix();
+      if (personSelect.value !== '') renderAssess(personSelect.value);
+      setSaveStatus(`Imported ${applied} people ✓`);
+    } catch(err) { setSaveStatus('⚠ Invalid backup file', true); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.getElementById('reset-targets').addEventListener('click', () => {
+  if (!confirm('Reset all target levels to the original defaults? This clears your saved changes in this browser.')) return;
+  resetTargets();
+});
+
+// =========== SELF-ASSESSMENT ===========
+const personSelect = document.getElementById('assess-person');
+const roleSummary = document.getElementById('role-summary');
+const tableWrap = document.getElementById('assess-table-wrap');
+const gapSummary = document.getElementById('gap-summary');
+const actions = document.getElementById('assess-actions');
+
+let curOg = null;
+PEOPLE.forEach((p, i) => {
+  if (p.fn !== curOg) {
+    const og = document.createElement('optgroup');
+    og.label = p.fn;
+    personSelect.appendChild(og);
+    curOg = p.fn;
+  }
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = `${p.name} — ${p.role}`;
+  personSelect.lastChild.appendChild(opt);
+});
+
+function renderAssess(idx) {
+  if (idx === '' || idx === null) {
+    roleSummary.classList.remove('shown');
+    gapSummary.classList.remove('shown');
+    actions.style.display = 'none';
+    tableWrap.innerHTML = '<div class="empty-state">Select your name above to begin.</div>';
+    return;
+  }
+  const p = PEOPLE[idx];
+  const tierObj = TIERS.find(t => t.code === p.tier);
+  roleSummary.classList.add('shown');
+  roleSummary.innerHTML = `
+    <span class="meta"><strong>${p.name}</strong></span>
+    <span class="meta">Role: <strong>${p.role}</strong></span>
+    <span class="meta">Target tier: <span class="tier-pill ${p.tier.toLowerCase()}">${p.tier}</span> <strong>${tierObj.label}</strong></span>`;
+
+  let html = `<table class="assess-table"><thead><tr>
+      <th>Skill</th><th class="center">Target</th><th class="center">Your level</th>
+      <th class="center">Gap</th><th class="center">Want to learn</th><th>Note / action</th>
+    </tr></thead><tbody>`;
+  let lastCat = null;
+  SKILLS.forEach((s, i) => {
+    if (s.cat !== lastCat) {
+      html += `<tr class="cat-row"><td colspan="6">${s.cat} · ${s.catName}</td></tr>`;
+      lastCat = s.cat;
+    }
+    const tgt = p.tgt[i];
+    html += `<tr>
+      <td><div class="skill-cell"><span class="skill-cell-name">${s.name}</span>
+        <span class="skill-cell-res">${s.code} · <a href="${s.res.url}" target="_blank" rel="noopener">${s.res.label}</a>${s.res2 ? ` · <a href="${s.res2.url}" target="_blank" rel="noopener">${s.res2.label}</a>` : ''}</span></div></td>
+      <td class="center"><span class="req-badge lvl-${tgt}">${tgt}</span></td>
+      <td class="center"><input type="number" min="0" max="4" class="level-input" data-idx="${i}" placeholder="–"></td>
+      <td class="center gap-cell" data-gap="${i}">—</td>
+      <td class="center"><input type="checkbox" class="want-box" data-want="${i}"></td>
+      <td><input type="text" class="level-input plan-note" data-note="${i}" style="width:100%;text-align:left;font-family:var(--sans);font-size:13px;padding:7px 10px" placeholder="Action…"></td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  tableWrap.innerHTML = html;
+  actions.style.display = 'block';
+
+  tableWrap.querySelectorAll('.level-input[type="number"]').forEach(inp => inp.addEventListener('input', () => updateGaps(idx)));
+  tableWrap.querySelectorAll('.want-box').forEach(cb => cb.addEventListener('change', () => updateGaps(idx)));
+  updateGaps(idx);
+}
+
+function updateGaps(idx) {
+  const p = PEOPLE[idx];
+  let below=0, at=0, above=0, assessed=0;
+  const priorities = [];
+  tableWrap.querySelectorAll('tbody tr').forEach(tr => {
+    const inp = tr.querySelector('.level-input[type="number"]');
+    if (!inp) return; // cat-row
+    const i = parseInt(inp.dataset.idx, 10);
+    const tgt = p.tgt[i];
+    const gapCell = tr.querySelector('.gap-cell');
+    const v = parseInt(inp.value, 10);
+    const wants = tr.querySelector('.want-box').checked;
+    if (isNaN(v)) {
+      gapCell.textContent = '—'; gapCell.className = 'center gap-cell';
+      if (wants) priorities.push(SKILLS[i].name + ' (wants to learn)');
+      return;
+    }
+    assessed++;
+    const gap = v - tgt;
+    gapCell.classList.remove('gap-pos','gap-neg','gap-zero');
+    if (gap > 0) { gapCell.textContent = gap; gapCell.className='center gap-cell gap-pos'; above++; }
+    else if (gap < 0) { gapCell.textContent = gap; gapCell.className='center gap-cell gap-neg'; below++; priorities.push(SKILLS[i].name + ` (${v}→${tgt})`); }
+    else { gapCell.textContent='0'; gapCell.className='center gap-cell gap-zero'; at++; }
+    if (gap >= 0 && wants && !priorities.includes(SKILLS[i].name)) priorities.push(SKILLS[i].name + ' (wants to learn)');
+  });
+
+  if (assessed === 0 && priorities.length === 0) { gapSummary.classList.remove('shown'); return; }
+  gapSummary.classList.add('shown');
+  let pr = '';
+  if (priorities.length) {
+    pr = `<div class="priorities"><strong>Focus next:</strong><ul>` +
+      priorities.slice(0,8).map(x => `<li>${x}</li>`).join('') + `</ul></div>`;
+  }
+  gapSummary.innerHTML = `
+    <h4>Gap analysis — ${p.name}</h4>
+    <span class="stat"><strong>${assessed}</strong>/ ${SKILLS.length} scored</span>
+    <span class="stat"><strong>${below}</strong>below target</span>
+    <span class="stat"><strong>${at}</strong>at target</span>
+    <span class="stat"><strong>${above}</strong>above target</span>
+    ${pr}`;
+}
+
+function resetAssess() { renderAssess(personSelect.value); }
+
+// =========== SAVE DEVELOPMENT PLAN (Excel / CSV) ===========
+function buildPlanRows(idx){
+  const p = PEOPLE[idx];
+  const tierObj = TIERS.find(t => t.code === p.tier) || {label:''};
+  const date = (document.getElementById('assess-date').value || '').trim() || new Date().toLocaleDateString();
+  const rows = [];
+  rows.push(['AI Skills Development Plan']);
+  rows.push(['Name', p.name]);
+  rows.push(['Role', p.role]);
+  rows.push(['Target tier', p.tier + ' — ' + tierObj.label]);
+  rows.push(['Date', date]);
+  rows.push([]);
+  rows.push(['Category','Skill','Current (0-4)','Target','Gap','Status','Want to learn','Recommended resource','Resource link','Notes / action']);
+  SKILLS.forEach((s, i) => {
+    const ci = document.querySelector(`.level-input[data-idx="${i}"]`);
+    const cur = ci ? parseInt(ci.value, 10) : NaN;
+    const tgt = p.tgt[i];
+    const wbox = document.querySelector(`.want-box[data-want="${i}"]`);
+    const want = wbox && wbox.checked ? 'Yes' : '';
+    const nt = document.querySelector(`.plan-note[data-note="${i}"]`);
+    const note = nt ? nt.value : '';
+    let gap = '', status = 'Not scored yet';
+    if (!isNaN(cur)) { gap = cur - tgt; status = gap < 0 ? 'Below target — develop' : (gap > 0 ? 'Above target' : 'At target'); }
+    const link = s.res.url.charAt(0) === '#' ? '' : s.res.url;
+    rows.push([s.catName, s.code + ' · ' + s.name, isNaN(cur) ? '' : cur, tgt, gap, status, want, s.res.label, link, note]);
+  });
+  return { person: p, rows };
+}
+
+function downloadPlan(){
+  if (personSelect.value === '') { setSaveStatus('Pick your name first ⚠', true); return; }
+  const { person, rows } = buildPlanRows(personSelect.value);
+  const safeName = person.name.replace(/[\\/:*?"<>|]/g, '');
+  const fname = 'AI Skills Plan - ' + safeName;
+  if (typeof XLSX !== 'undefined') {
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:26},{wch:42},{wch:12},{wch:8},{wch:6},{wch:22},{wch:13},{wch:34},{wch:54},{wch:30}];
+    const wbk = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wbk, ws, 'Development Plan');
+    XLSX.writeFile(wbk, fname + '.xlsx');
+    setSaveStatus('Excel plan downloaded ✓');
+  } else {
+    // Fallback if the Excel library didn't load (e.g. offline): download a CSV that Excel opens
+    const csv = rows.map(r => r.map(c => {
+      c = c == null ? '' : String(c);
+      return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c;
+    }).join(',')).join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(a.href);
+    setSaveStatus('Saved as CSV (Excel library offline) ✓');
+  }
+}
+personSelect.addEventListener('change', e => renderAssess(e.target.value));
+
+// =========== RENDER: LEARNING PATHS ===========
+const pathGrid = document.getElementById('path-grid');
+PATHS.forEach(p => {
+  const c = document.createElement('div');
+  c.className = 'path-card';
+  let steps = p.steps.map(s => `<li><b>${s[0]}.</b> ${s[1]}</li>`).join('');
+  c.innerHTML = `<h3>${p.title}</h3><div class="who">${p.who}</div><ol>${steps}</ol>`;
+  pathGrid.appendChild(c);
+});
+
+// =========== RENDER: RESOURCES ===========
+const resTable = document.getElementById('res-table');
+let rHtml = `<thead><tr><th style="width:170px">Category</th><th>Resource</th><th style="width:90px">Type</th></tr></thead><tbody>`;
+RESOURCES.forEach(group => {
+  group.items.forEach((it, j) => {
+    rHtml += `<tr>
+      <td class="cat">${j===0 ? group.cat : ''}</td>
+      <td>${it.start ? '★ ' : ''}<a href="${it.url}" target="_blank" rel="noopener">${it.label}</a></td>
+      <td class="type">${it.type}</td>
+    </tr>`;
+  });
+});
+rHtml += `</tbody>`;
+resTable.innerHTML = rHtml;
+
+// =========== RENDER: TRAINING ===========
+const trainGrid = document.getElementById('train-grid');
+TRAINING.forEach(t => {
+  const c = document.createElement('div');
+  c.className = 'train-card';
+  c.innerHTML = `<div class="tag">${t.tag}</div><h3>${t.title}</h3><p>${t.body}</p>`;
+  trainGrid.appendChild(c);
+});
+
+// =========== NAV SCROLL HIGHLIGHT ===========
+const navLinks = document.querySelectorAll('.section-nav a');
+const sections = document.querySelectorAll('section');
+function updateActiveNav() {
+  let cur = sections[0].id;
+  const y = window.scrollY + 120;
+  sections.forEach(s => { if (s.offsetTop <= y) cur = s.id; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+}
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+updateActiveNav();
+</script>
+</body>
+</html>
