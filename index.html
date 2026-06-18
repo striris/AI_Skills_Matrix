@@ -561,29 +561,29 @@ const SKILL_KEYS = SKILLS.map(s => s.code);
 // =========== PEOPLE (targets in SKILL_KEYS order) ===========
 // Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 C3 | D1 D2 D3 | E1 E2 | F1 F2  (20 skills)
 const PEOPLE = [
+  {fn:'MIDDLE OFFICE', name:'Vishesh Kathuria', role:'Group Controller', tier:'T3',
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'MIDDLE OFFICE', name:'Chong Yean Mui', role:'Head of Middle Office', tier:'T3',
-   tgt:[3,3,3,3,2,3, 2,3,2,2, 3,2,2, 3,2,3, 1,1, 1,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'MIDDLE OFFICE', name:'Lim Kai Shean', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
-  {fn:'MIDDLE OFFICE', name:'Vishesh Kathuria', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'MIDDLE OFFICE', name:'Poh Wei Min', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,2,2, 3,3,3,3, 3,2,3, 3,2,3, 3,3, 1,2]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
 
   {fn:'PnL', name:'Berilyn Chia Zi Hui', role:'PnL', tier:'T3',
-   tgt:[3,3,3,3,2,3, 3,3,3,3, 3,2,2, 3,3,3, 3,3, 1,2]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
 
   {fn:'RAW SUGAR RISK', name:'Pang Siew Kim', role:'Raw Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,3,2, 3,3,3, 2,2, 1,2]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'RAW SUGAR RISK', name:'Clare Choo Chui Ling', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'RAW SUGAR RISK', name:'JR Boholst Animas', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
 
   {fn:'WHITE SUGAR RISK', name:'Sharin Poy Mei Ling', role:'White Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,3,2, 3,3,3, 2,2, 1,2]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {fn:'WHITE SUGAR RISK', name:'Ida Yeung Pui Yan', role:'White Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,2, 3,3,3,3, 3,2,2, 3,3,3, 2,3, 1,1]}
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]}
 ];
 
 // =========== TARGET PERSISTENCE (saves edits in this browser) ===========
@@ -832,7 +832,7 @@ renderMatrix();
 const TIER_QUAL = [
   {code:'T1', label:'AI Aware',      lvl:[1,1,1,2,1,1, 1,0,0,0, 1,0,0, 1,0,0, 0,0, 0,0]},
   {code:'T2', label:'AI User',       lvl:[2,2,2,3,2,2, 2,1,1,2, 2,0,0, 2,1,1, 1,1, 1,0]},
-  {code:'T3', label:'AI Power User', lvl:[3,3,3,3,3,3, 3,2,2,3, 3,2,2, 3,2,2, 2,2, 2,1]},
+  {code:'T3', label:'AI Power User', lvl:[3,3,3,3,3,3, 3,3,2,3, 3,2,1, 3,2,2, 3,3, 2,1]},
   {code:'T4', label:'AI Champion',   lvl:[3,3,3,3,3,3, 3,3,3,3, 3,3,3, 3,3,3, 3,3, 3,3]}
 ];
 (function renderTierMatrix(){
