@@ -426,6 +426,8 @@
   .cal-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
   .cal-table th { background: var(--green-700); color: #fff; text-align: left; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 11px 14px; font-weight: 500; }
   .cal-table td { padding: 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  .cal-table a { color: var(--green-600); text-decoration: none; border-bottom: 1px dotted var(--green-300); }
+  .cal-table .obj { margin: 8px 0 0 16px; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
   .cal-empty { text-align: center; padding: 56px 20px; color: var(--ink-faint); font-style: italic; }
   .cal-callout { margin-top: 24px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
   .cal-callout a { color: var(--green-600); text-decoration: none; border-bottom: 1px dotted var(--green-300); }
@@ -568,9 +570,10 @@
       <div id="assess-table-wrap"><div class="empty-state">Select your name above to begin.</div></div>
       <div class="gap-summary" id="gap-summary"></div>
       <div id="assess-actions" style="display:none;">
-        <button class="btn" onclick="downloadPlan()">⬇ Save development plan (Excel)</button>
+        <button class="btn" onclick="downloadPlan()">⬇ Save &amp; email development plan</button>
         <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
         <button class="btn secondary" onclick="resetAssess()">Reset scores</button>
+        <p class="edit-hint" style="margin-top:12px">This downloads your Excel and opens an email to Xinran (xinran.liu@sg.wilmar-intl.com). Just <strong>attach the downloaded file</strong> and click send.</p>
       </div>
     </div>
   </section>
@@ -643,13 +646,36 @@
 
     <section style="margin-bottom:48px">
       <div class="section-header"><span class="section-num">A</span><h2>Scheduled sessions</h2></div>
-      <p class="section-intro">Scheduled AI training sessions for the team will be listed here. Nothing is scheduled yet — sessions will be drawn from the internal training ideas below.</p>
+      <p class="section-intro">Upcoming AI training sessions for the team. More will be drawn from the internal training ideas below.</p>
       <table class="cal-table">
         <thead><tr>
-          <th style="width:140px">Date</th><th>Session</th><th style="width:150px">Audience</th><th style="width:150px">Tool focus</th><th style="width:110px">Status</th>
+          <th style="width:160px">Date</th><th>Session</th><th style="width:170px">Audience</th><th style="width:140px">Tool focus</th><th style="width:110px">Status</th>
         </tr></thead>
         <tbody>
-          <tr><td colspan="5"><div class="cal-empty">No sessions scheduled yet — check back soon.</div></td></tr>
+          <tr>
+            <td>Thu, 25 Jun 2026<br><small style="color:var(--ink-faint)">9:30–11:00 AM SGT</small></td>
+            <td>
+              <strong>Secure &amp; Responsible Generative AI with Microsoft 365 Copilot</strong><br>
+              <small style="color:var(--ink-faint)">Microsoft Teams · company training event</small>
+              <ul class="obj">
+                <li>Get the most out of Microsoft 365 Copilot in everyday tasks</li>
+                <li>Apply best practices for data security &amp; privacy when using AI</li>
+                <li>Understand responsible AI principles and avoid common pitfalls</li>
+                <li>Build confidence using Copilot in a safe, compliant way</li>
+              </ul>
+              <a href="https://events.teams.microsoft.com/event/941a0fd2-4c65-4913-a6fc-2d09bc917d2e@cf782ba3-926e-4a04-9e7e-aa2f6e18f34d" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px">Register →</a>
+            </td>
+            <td>Everyone with a Basic or Premium Copilot licence</td>
+            <td>Microsoft 365 Copilot</td>
+            <td>Confirmed</td>
+          </tr>
+          <tr>
+            <td>Fri, 3 Jul 2026<br><small style="color:var(--ink-faint)">Online</small></td>
+            <td>Claude Cowork training<br><small style="color:var(--ink-faint)">by Trainocate · company training event</small></td>
+            <td>Staff with a Claude licence</td>
+            <td>Claude Cowork</td>
+            <td>Confirmed</td>
+          </tr>
         </tbody>
       </table>
     </section>
@@ -669,7 +695,7 @@
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx-js-style.min.js"></script>
 <script>
 // =========== TIERS ===========
 const TIERS = [
@@ -689,7 +715,7 @@ const TIERS = [
 const CAP_LABELS = { basic:'Copilot Basic', ent:'Copilot 365', claude:'Claude' };
 const CATS = [
   {code:'A', name:'Everyday GenAI (foundations)', skills:[
-    {code:'A1', name:'AI data security & policy', def:'Use AI safely: always use a company-approved tool, never share sensitive personal data, only put company data into approved enterprise tools, anonymise where you can, and never trust AI output blindly — it can make things up.', res:{label:'Read our AI data safety rules', url:'#data-rules'}, cap:['basic','ent','claude']},
+    {code:'A1', name:'AI data security & policy', def:'Use AI safely: always use a company-approved tool, never share sensitive personal data, only put company data into approved enterprise tools, anonymise where you can, and never trust AI output blindly — it can make things up.', res:{label:'Refer to AI Hub for more resources', url:'#resources'}, cap:['basic','ent','claude']},
     {code:'A2', name:'Summarise docs, reports & meetings', def:'Turn long reports, transcripts and email threads into a clean summary or action list with Claude or Copilot.', res:{label:'Copilot: get started', url:'https://support.microsoft.com/en-us/topic/copilot-tutorial-start-using-copilot-fe837774-3f6b-4885-850d-01f0e428898c'}, res2:{label:'Getting started with Claude.ai', url:'https://support.claude.com/en/articles/12997377-getting-started-with-claude-ai'}, cap:['basic','ent','claude']},
     {code:'A3', name:'Effective prompting & checking output', def:'Write clear prompts that get useful answers, and sanity-check what the AI gives back before using it.', res:{label:'Prompting tutorial', url:'https://www.youtube.com/watch?v=_ZvnD73m40o'}, res2:{label:'Anthropic prompting guide', url:'https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview'}, cap:['basic','ent','claude']},
     {code:'A4', name:'Draft & polish emails / messages', def:'Use Claude or Copilot to draft, rewrite, shorten or change the tone of emails, chat messages and notes.', res:{label:'Copilot beginner guide', url:'https://www.youtube.com/watch?v=JbOJliF-Cn4'}, res2:{label:'Get started with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}, cap:['basic','ent','claude']},
@@ -922,15 +948,15 @@ const TOOL_GROUPS = [
   {cat:'Write & create', tasks:[
     {task:'Draft / polish an email',               cells:['★','★','✓','✓','—']},
     {task:'Summarise a document or report',        cells:['✓','★','★','✓','—']},
-    {task:'Build a slide deck',                    cells:['—','★','✓','✓','—']},
-    {task:'Generate an image',                     cells:['★','✓','—','★','—']}
+    {task:'Build a slide deck',                    cells:['—','★','★','✓','—']},
+    {task:'Generate an image',                     cells:['✓','★','—','★','—']}
   ]},
   {cat:'Research', tasks:[
-    {task:'Research market & news',                cells:['✓','★','✓','✓','—']}
+    {task:'Research market & news',                cells:['✓','★','★','✓','—']}
   ]},
   {cat:'Inbox & documents', tasks:[
     {task:'Triage / summarise the inbox',          cells:['—','★','—','—','✓']},
-    {task:'Extract data from a PDF / contract',    cells:['—','✓','★','✓','—']},
+    {task:'Extract data from a PDF / contract',    cells:['—','★','★','✓','—']},
     {task:'Scheduled morning summary',             cells:['—','★','—','—','★']},
     {task:'Auto-file attachments → SharePoint',    cells:['—','—','—','—','★']}
   ]},
@@ -944,8 +970,8 @@ const TOOL_GROUPS = [
     {task:'Connect AI to internal data & tools',   cells:['—','★','✓','✓','✓']}
   ]},
   {cat:'Coding & building', tasks:[
-    {task:'Write / debug a VBA macro',             cells:['★','✓','★','★','—']},
-    {task:'Write / run a Python script',           cells:['✓','✓','★','★','—']},
+    {task:'Write / debug a VBA macro',             cells:['★','★','★','★','—']},
+    {task:'Write / run a Python script',           cells:['✓','★','★','★','—']},
     {task:'Build a web page or interactive tool',  cells:['✓','✓','★','✓','—']}
   ]}
 ];
@@ -1372,6 +1398,7 @@ function buildPlanRows(idx){
   rows.push(['Previous assessment', prevDate || '—']);
   rows.push([]);
   rows.push(['Category','Skill','Target','Previous','Previous date','Current','Change','Gap','Status','Want to learn','Recommended resource','Resource link','Notes / action']);
+  const belowRows = [];
   SKILLS.forEach((s, i) => {
     const ci = document.querySelector(`.level-input[data-idx="${i}"]`);
     const cur = ci ? parseInt(ci.value, 10) : NaN;
@@ -1386,14 +1413,23 @@ function buildPlanRows(idx){
     if (!isNaN(cur) && pv !== '') change = cur - pv;
     const link = s.res.url.charAt(0) === '#' ? '' : s.res.url;
     rows.push([s.catName, s.code + ' · ' + s.name, tgt, pv, (pv !== '' ? (prevDate || '') : ''), isNaN(cur) ? '' : cur, change, gap, status, want, s.res.label, link, note]);
+    if (!isNaN(cur) && cur < tgt) belowRows.push(rows.length - 1);
   });
-  return { person: p, rows };
+  return { person: p, rows, belowRows };
+}
+
+// Open a pre-filled Outlook email to the team lead. mailto can't attach files,
+// so the body just asks the person to attach the just-downloaded file and click send.
+function emailPlan(person, ym, fileLabel){
+  const subject = 'AI Skills Development Plan — ' + person.name + ' — ' + ym;
+  const body = 'Hi,\r\n\r\nPlease find attached my AI Skills development plan (' + fileLabel + ').\r\n\r\n— ' + person.name + ' (' + person.role + ')';
+  window.location.href = 'mailto:xinran.liu@sg.wilmar-intl.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
 function downloadPlan(){
   if (personSelect.value === '') { setSaveStatus('Pick your name first ⚠', true); return; }
   const idx = personSelect.value;
-  const { person, rows } = buildPlanRows(idx);
+  const { person, rows, belowRows } = buildPlanRows(idx);
   // remember this round so it becomes the "previous" next time (this browser)
   const now = new Date();
   const date = now.toLocaleDateString();
@@ -1402,12 +1438,24 @@ function downloadPlan(){
   saveHistory(person.name, scores, date);
   const safeName = person.name.replace(/[\\/:*?"<>|]/g, '');
   const fname = 'AI Skills Plan - ' + safeName + ' - ' + ym;
+  let fileExt = 'csv';
   if (typeof XLSX !== 'undefined') {
     const ws = XLSX.utils.aoa_to_sheet(rows);
     ws['!cols'] = [{wch:24},{wch:40},{wch:8},{wch:9},{wch:14},{wch:9},{wch:8},{wch:6},{wch:22},{wch:13},{wch:32},{wch:50},{wch:28}];
+    // bold any skill row where current is below target (gap < 0)
+    if (belowRows && belowRows.length) {
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      belowRows.forEach(r => {
+        for (let c = range.s.c; c <= range.e.c; c++) {
+          const ref = XLSX.utils.encode_cell({ r: r, c: c });
+          if (ws[ref]) { ws[ref].s = ws[ref].s || {}; ws[ref].s.font = Object.assign({}, ws[ref].s.font, { bold: true }); }
+        }
+      });
+    }
     const wbk = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wbk, ws, 'Development Plan');
     XLSX.writeFile(wbk, fname + '.xlsx');
+    fileExt = 'xlsx';
     setSaveStatus('Excel plan downloaded ✓');
   } else {
     // Fallback if the Excel library didn't load (e.g. offline): download a CSV that Excel opens
@@ -1421,8 +1469,10 @@ function downloadPlan(){
     a.download = fname + '.csv';
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(a.href);
+    fileExt = 'csv';
     setSaveStatus('Saved as CSV (Excel library offline) ✓');
   }
+  emailPlan(person, ym, fname + '.' + fileExt);
 }
 personSelect.addEventListener('change', e => renderAssess(e.target.value));
 
