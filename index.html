@@ -414,7 +414,8 @@
   table.matrix td.cap-best { background: var(--green-700); color: #fff; font-weight: 600; }
   table.matrix td.cap-yes  { background: var(--green-50);  color: var(--green-700); }
   table.matrix td.cap-no   { color: var(--ink-faint); }
-  table.matrix td.task-col { text-align: left; padding-left: 18px; min-width: 220px; color: var(--ink); }
+  table.matrix td.task-col { text-align: left; padding-left: 18px; min-width: 200px; color: var(--ink); }
+  table.matrix td.cat-col { background: var(--green-50); color: var(--green-800); font-weight: 500; vertical-align: top; border-right: 1px solid var(--line); min-width: 150px; }
 
   .rule-box { background: var(--green-50); border-left: 3px solid var(--green-500); border-radius: 8px; padding: 18px 22px; margin: 28px 0 8px; }
   .rule-box h4 { font-family: var(--serif); font-size: 16px; font-weight: 500; margin-bottom: 10px; color: var(--green-900); }
@@ -550,19 +551,20 @@
   <!-- ==================== ASSESS ==================== -->
   <section id="assess">
     <div class="section-header"><span class="section-num">04</span><h2>Your self-assessment &amp; gap analysis</h2></div>
-    <p class="section-intro">Pick your name to load your targets. For each skill, enter your <strong>current level (0–4)</strong> and tick <strong>"want to learn"</strong> for anything you'd like to develop. Gaps and priorities calculate automatically. Click <strong>Save development plan</strong> to download an Excel you can share.</p>
+    <p class="section-intro">This is a <strong>repeatable assessment</strong> — do it now, then again in about six months to track your progress. Pick your name and (if you've done it before) <strong>load your previous plan</strong> to see how far you've come. Enter your <strong>current level (0–4)</strong> for each skill and tick <strong>"want to learn"</strong> for anything you'd like to develop. Click <strong>Save development plan</strong> to download an Excel — keep it as your record for next time.</p>
     <div class="assess">
-      <div class="assess-controls">
+      <div class="assess-controls" style="grid-template-columns:1fr">
         <div class="field">
           <label class="field-label" for="assess-person">Your name</label>
           <select id="assess-person"><option value="">— Select your name —</option></select>
         </div>
-        <div class="field">
-          <label class="field-label" for="assess-date">Date</label>
-          <input type="text" id="assess-date" placeholder="e.g. 16 Jun 2026">
-        </div>
       </div>
       <div class="role-summary" id="role-summary"></div>
+      <div id="prev-bar" style="display:none;margin-bottom:18px">
+        <label class="btn secondary" for="prev-file" style="cursor:pointer;margin-top:0;margin-left:0">⬆ Load my previous plan (Excel)</label>
+        <input type="file" id="prev-file" accept=".xlsx,.xls" style="display:none">
+        <span class="save-status" id="prev-status"></span>
+      </div>
       <div id="assess-table-wrap"><div class="empty-state">Select your name above to begin.</div></div>
       <div class="gap-summary" id="gap-summary"></div>
       <div id="assess-actions" style="display:none;">
@@ -590,7 +592,6 @@
         <li>Always use a company-approved AI tool.</li>
         <li>Never share sensitive personal information with any AI.</li>
         <li>Only share company information with our approved enterprise tools — Microsoft Copilot (Basic / 365), ChatGPT Enterprise, or Claude Team. Never with free or personal AI accounts.</li>
-        <li>Where you can, anonymise the data first (take out names, prices, counterparties).</li>
         <li>AI sometimes “hallucinates” — it makes things up. Always check anything important. Don’t trust it blindly.</li>
       </ol></div>
   </section>
@@ -612,6 +613,8 @@
       <div class="section-header"><span class="section-num">B</span><h2>Which tool for which task</h2></div>
       <p class="section-intro">For each task, find the best starting tool. <strong>★ = best choice · ✓ = works well · — = not suited.</strong> Many tasks have more than one good option — pick what you already have access to.</p>
       <div class="matrix-wrap"><div class="matrix-scroll"><table class="matrix" id="tools-matrix-table"></table></div></div>
+
+      <div class="caveat"><strong>Heads-up on Claude + Microsoft</strong>In our environment Claude can’t currently connect to Microsoft 365 — no access to Outlook email, Teams or SharePoint. For inbox, Teams and SharePoint jobs, use Copilot or Power Automate. Claude still works fully on files you upload and on non-Microsoft connectors.</div>
 
       <div class="rule-box" id="rule-of-thumb">
         <h4>Rule of thumb</h4>
@@ -691,13 +694,13 @@ const CATS = [
     {code:'A3', name:'Effective prompting & checking output', def:'Write clear prompts that get useful answers, and sanity-check what the AI gives back before using it.', res:{label:'Prompting tutorial', url:'https://www.youtube.com/watch?v=_ZvnD73m40o'}, res2:{label:'Anthropic prompting guide', url:'https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview'}, cap:['basic','ent','claude']},
     {code:'A4', name:'Draft & polish emails / messages', def:'Use Claude or Copilot to draft, rewrite, shorten or change the tone of emails, chat messages and notes.', res:{label:'Copilot beginner guide', url:'https://www.youtube.com/watch?v=JbOJliF-Cn4'}, res2:{label:'Get started with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}, cap:['basic','ent','claude']},
     {code:'A5', name:'Market & news research', def:'Use AI to research and summarise market drivers — sugar fundamentals, weather, prices and news — into a quick brief.', res:{label:'Copilot Researcher agent', url:'https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot'}, res2:{label:'Research with Claude', url:'https://support.claude.com/en/articles/12997377-getting-started-with-claude-ai'}, cap:['basic','ent','claude']},
-    {code:'A6', name:'Create slides & management reports', def:'Draft management reports and build slide decks with AI — Copilot in PowerPoint/Word, or draft in Claude then refine.', res:{label:'Create a presentation with Copilot', url:'https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d'}, res2:{label:'Draft reports with Claude', url:'https://support.claude.com/en/articles/8114491-get-started-with-claude'}, cap:['ent','claude']}
+    {code:'A6', name:'Create slides & management reports', def:'Draft management reports and build slide decks with AI — Copilot in PowerPoint/Word, or draft in Claude then refine.', res:{label:'Create a presentation with Copilot', url:'https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d'}, res2:{label:'Create slides with Claude (video)', url:'https://www.youtube.com/watch?v=uLEgb_y4kAE'}, cap:['basic','ent','claude']}
   ]},
   {code:'B', name:'Inbox & document automation', skills:[
     {code:'B1', name:'Automate email triage & processing', def:'Use AI to sort, summarise, flag and act on incoming email — Copilot in Outlook, or Claude/Cowork with an email connector.', res:{label:'Triage email with Copilot in Outlook', url:'https://support.microsoft.com/en-us/office/triage-email-with-microsoft-365-copilot-in-outlook-85932469-7c3f-4a6a-acdb-adf0f3ebc169'}, res2:{label:'Connect Claude to your tools', url:'https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities'}, cap:['ent','claude']},
     {code:'B2', name:'Auto daily morning summary', def:'A scheduled summary each morning — overnight emails, news or position changes — via Copilot scheduled prompts or a Claude/Cowork scheduled task.', res:{label:'Schedule Copilot prompts (daily summary)', url:'https://support.microsoft.com/en-us/topic/schedule-copilot-prompts-29dfd5fb-211a-4515-88a6-730b8074e489'}, res2:{label:'Get started with Claude Cowork', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'}, cap:['ent','claude']},
     {code:'B3', name:'Auto-save attachments to SharePoint', def:'Automatically file email attachments into the right SharePoint/OneDrive library — Power Automate, or Claude/Cowork with a connector.', res:{label:'Save attachments (Power Automate)', url:'https://www.youtube.com/watch?v=_3BNmTsawAI'}, res2:{label:'Connect Claude to SharePoint/OneDrive', url:'https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities'}, cap:['ent','claude']},
-    {code:'B4', name:'Extract data from PDFs / contracts', def:'Pull figures and terms out of confirmations, contracts and scanned PDFs — upload a PDF to Claude, or use Copilot in Excel.', res:{label:'Claude: read & extract from PDFs', url:'https://docs.claude.com/en/docs/build-with-claude/pdf-support'}, res2:{label:'Copilot in Excel (reads PDFs)', url:'https://support.microsoft.com/en-us/office/get-started-with-copilot-in-excel-d7110502-0334-4b4f-a175-a73abdfc118a'}, cap:['ent','claude']}
+    {code:'B4', name:'Extract data from PDFs / contracts', def:'Pull figures and terms out of confirmations, contracts and scanned PDFs — upload a PDF to Claude, or use Copilot in Excel.', res:{label:'Claude: read & extract from PDFs', url:'https://docs.claude.com/en/docs/build-with-claude/pdf-support'}, res2:{label:'Copilot in Excel (reads PDFs)', url:'https://support.microsoft.com/en-us/office/get-started-with-copilot-in-excel-d7110502-0334-4b4f-a175-a73abdfc118a'}, cap:['basic','ent','claude']}
   ]},
   {code:'C', name:'Knowledge assistants & agents', skills:[
     {code:'C1', name:'Use a company-knowledge assistant', def:'Chat with an assistant that has read our docs/policies and answers grounded in them — a Claude Project, or Copilot grounded in your files.', res:{label:'Copilot: add knowledge sources', url:'https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder-add-knowledge'}, res2:{label:'Claude Projects', url:'https://support.claude.com/en/articles/9517075-what-are-projects'}, cap:['ent','claude']},
@@ -713,8 +716,7 @@ const CATS = [
     {code:'E2', name:'Write Python scripts with AI', def:'Get AI to write and explain Python for data pulls, calculations and small automations — Claude/Cowork can also run it for you.', res:{label:'Python for data (freeCodeCamp)', url:'https://www.youtube.com/watch?v=r-uOLxNrNk8'}, res2:{label:'Claude Cowork (writes & runs Python)', url:'https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork'}, cap:['basic','ent','claude']}
   ]},
   {code:'F', name:'Building apps & interfaces', skills:[
-    {code:'F1', name:'Build & share an artifact in Claude', def:'Build a working interactive page, tool or visual in Claude (like this matrix) and share it via a link. Copilot and ChatGPT can also generate the HTML code, but Claude renders a live, shareable app.', res:{label:'Claude Artifacts — video walkthrough', url:'https://www.youtube.com/watch?v=9YGg4JaVN4w'}, res2:{label:'Publish & share Claude artifacts', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'}, cap:['claude']},
-    {code:'F2', name:'Build internal tools & dashboards', def:'Spin up a small internal tool or dashboard with AI — a Claude artifact, or a low-code app via Copilot Studio / Power Apps.', res:{label:'Microsoft Copilot Studio', url:'https://learn.microsoft.com/en-us/microsoft-copilot-studio/'}, res2:{label:'Build it as a Claude artifact', url:'https://support.claude.com/en/articles/9547008-publish-and-share-artifacts'}, cap:['ent','claude']}
+    {code:'F1', name:'Build a web page or interactive tool', def:'Build a working interactive web page or tool (like this matrix) with AI. Copilot (Basic or 365) and Claude can both generate a complete HTML page; Claude can also render and share it live as an artifact.', res:{label:'Claude Artifacts — video walkthrough', url:'https://www.youtube.com/watch?v=9YGg4JaVN4w'}, res2:{label:'Microsoft Copilot: generating HTML', url:'https://www.youtube.com/watch?v=UZDSXLks4Cw'}, cap:['basic','ent','claude']}
   ]}
 ];
 
@@ -724,35 +726,35 @@ CATS.forEach(c => c.skills.forEach(s => SKILLS.push({...s, cat:c.code, catName:c
 const SKILL_KEYS = SKILLS.map(s => s.code);
 
 // =========== PEOPLE (targets in SKILL_KEYS order) ===========
-// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1 F2  (19 skills)
+// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1  (18 skills)
 const PEOPLE = [
   {fn:'MIDDLE OFFICE', name:'Vishesh Kathuria', role:'Group Controller', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'MIDDLE OFFICE', name:'Chong Yean Mui', role:'Head of Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'MIDDLE OFFICE', name:'Lim Kai Shean', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'MIDDLE OFFICE', name:'Poh Wei Min', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
 
   {fn:'PnL', name:'Berilyn Chia Zi Hui', role:'PnL', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
 
   {fn:'RAW SUGAR RISK', name:'Pang Siew Kim', role:'Raw Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'RAW SUGAR RISK', name:'Clare Choo Chui Ling', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'RAW SUGAR RISK', name:'JR Boholst Animas', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
 
   {fn:'WHITE SUGAR RISK', name:'Sharin Poy Mei Ling', role:'White Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
   {fn:'WHITE SUGAR RISK', name:'Ida Yeung Pui Yan', role:'White Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]}
+   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]}
 ];
 
 // =========== TARGET PERSISTENCE (saves edits in this browser) ===========
-const STORE_KEY = 'wilmarAISkillsTargets_v5';
+const STORE_KEY = 'wilmarAISkillsTargets_v6';
 const DEFAULT_TGT = {};
 PEOPLE.forEach(p => DEFAULT_TGT[p.name] = p.tgt.slice());
 
@@ -848,24 +850,24 @@ const RESOURCES = [
 
 // =========== LEARNING PATHS ===========
 const PATHS = [
-  {title:'Foundation', who:'Everyone — start here', steps:[
+  {title:'Foundation', who:'', steps:[
     ['Data safety','Learn what never goes into a public tool — positions, prices, counterparties. (A1)'],
     ['Daily drafting & summarising','Use Copilot/ChatGPT every day for a week to draft emails and summarise one report. (A4, A2)'],
     ['Prompting that works','Watch the prompting tutorial; learn to give context, role and format. (A3)'],
     ['Ask your documents','Try a company-knowledge assistant on a policy or procedure doc. (C1)']
   ]},
-  {title:'Power User', who:'Risk analysts, middle office, PnL', steps:[
+  {title:'Power User', who:'', steps:[
     ['Copilot in Excel','Build formulas, clean data, pivots and charts from plain English. (D1)'],
     ['Extract from PDFs','Pull figures from confirmations/contracts with AI. (B4)'],
     ['Regression & stats','Run and interpret a regression with AI guidance. (D2)'],
     ['VBA & Python with AI','Generate and debug a macro or script you actually use. (E1, E2)']
   ]},
-  {title:'Automator / Builder', who:'Risk heads & strong analysts', steps:[
+  {title:'Automator / Builder', who:'', steps:[
     ['Morning summary flow','Build a scheduled summary of overnight email/news/positions. (B2)'],
     ['Attachments → SharePoint','Automate filing email attachments into SharePoint. (B3)'],
     ['Email triage','Auto-sort and flag the inbox so priorities surface. (B1)'],
     ['Desk-knowledge agent','Stand up an agent that knows your desk and answers FAQs. (C2)'],
-    ['Internal tool / dashboard','Build a small AI-augmented dashboard or tool. (D3, F1, F2)']
+    ['Internal tool / dashboard','Build a small AI-augmented dashboard or tool. (D3, F1)']
   ]}
 ];
 
@@ -897,7 +899,7 @@ const TOOLS = [
    what:'Strong reasoning over large documents and PDFs, deep data analysis, and it builds live interactive tools (Artifacts). Best for the heavier or more bespoke jobs.',
    modes:['Projects','Artifacts','Cowork','Connectors (MCP)','Claude for Excel'],
    good:'Read/extract PDFs & contracts, desk-knowledge Projects, build dashboards/tools, run Python (Cowork), analysis.',
-   note:'Use Claude Team for company data — never a personal account.'},
+   note:'Use Claude Team for company data — never a personal account. Note: it can’t currently connect to Microsoft 365 (email, Teams, SharePoint).'},
   {name:'ChatGPT Pro', access:'Where licensed', cls:'cap-ent',
    what:'General-purpose assistant, strong at coding, ad-hoc data analysis and writing. A capable alternative to Claude/Copilot chat.',
    modes:['Chat','Code interpreter','Custom GPTs'],
@@ -912,24 +914,40 @@ const TOOLS = [
 
 // Task → tool capability. cells in column order: Basic, 365, Claude, ChatGPT, Power Automate
 // '★' best · '✓' works · '—' not suited
+// cells in column order: Copilot Basic, Copilot 365, Claude Team, ChatGPT, Power Automate
+// NOTE: in our environment Claude can't connect to Microsoft 365 (email/Teams/SharePoint),
+// so those rows show '—' for Claude even though Claude could do them with a connector elsewhere.
 const TOOL_COLS = ['Copilot Basic','Copilot 365','Claude Team','ChatGPT','Power Automate'];
-const TOOL_TASKS = [
-  {task:'Draft / polish an email',                 cells:['★','★','✓','✓','—']},
-  {task:'Summarise a document or report',          cells:['✓','★','★','✓','—']},
-  {task:'Triage / summarise the inbox',            cells:['—','★','✓','—','✓']},
-  {task:'Research market & news',                  cells:['✓','★','✓','✓','—']},
-  {task:'Build a slide deck',                      cells:['—','★','✓','✓','—']},
-  {task:'Analyse data in Excel',                   cells:['—','★','★','✓','—']},
-  {task:'Extract data from a PDF / contract',      cells:['—','✓','★','✓','—']},
-  {task:'Regression / statistics',                 cells:['—','✓','★','★','—']},
-  {task:'Company-knowledge assistant',             cells:['—','★','★','✓','—']},
-  {task:'Build a desk-knowledge agent',            cells:['—','★','✓','✓','—']},
-  {task:'Connect AI to internal data & tools',     cells:['—','★','★','✓','✓']},
-  {task:'Scheduled morning summary',               cells:['—','★','✓','—','★']},
-  {task:'Auto-file attachments → SharePoint',      cells:['—','—','✓','—','★']},
-  {task:'Write / debug a VBA macro',               cells:['★','✓','★','★','—']},
-  {task:'Write / run a Python script',             cells:['✓','✓','★','★','—']},
-  {task:'Build an interactive tool / dashboard',   cells:['—','✓','★','✓','✓']}
+const TOOL_GROUPS = [
+  {cat:'Write & create', tasks:[
+    {task:'Draft / polish an email',               cells:['★','★','✓','✓','—']},
+    {task:'Summarise a document or report',        cells:['✓','★','★','✓','—']},
+    {task:'Build a slide deck',                    cells:['—','★','✓','✓','—']},
+    {task:'Generate an image',                     cells:['★','✓','—','★','—']}
+  ]},
+  {cat:'Research', tasks:[
+    {task:'Research market & news',                cells:['✓','★','✓','✓','—']}
+  ]},
+  {cat:'Inbox & documents', tasks:[
+    {task:'Triage / summarise the inbox',          cells:['—','★','—','—','✓']},
+    {task:'Extract data from a PDF / contract',    cells:['—','✓','★','✓','—']},
+    {task:'Scheduled morning summary',             cells:['—','★','—','—','★']},
+    {task:'Auto-file attachments → SharePoint',    cells:['—','—','—','—','★']}
+  ]},
+  {cat:'Data & analytics', tasks:[
+    {task:'Analyse data in Excel',                 cells:['—','★','★','✓','—']},
+    {task:'Regression / statistics',               cells:['—','✓','★','★','—']}
+  ]},
+  {cat:'Knowledge & agents', tasks:[
+    {task:'Company-knowledge assistant',           cells:['—','★','★','✓','—']},
+    {task:'Build a desk-knowledge agent',          cells:['—','★','✓','✓','—']},
+    {task:'Connect AI to internal data & tools',   cells:['—','★','✓','✓','✓']}
+  ]},
+  {cat:'Coding & building', tasks:[
+    {task:'Write / debug a VBA macro',             cells:['★','✓','★','★','—']},
+    {task:'Write / run a Python script',           cells:['✓','✓','★','★','—']},
+    {task:'Build a web page or interactive tool',  cells:['✓','✓','★','✓','—']}
+  ]}
 ];
 
 // =========== INSPIRATION RECIPES ===========
@@ -1056,12 +1074,12 @@ renderMatrix();
 
 // =========== RENDER: TIER QUALIFICATION MATRIX ===========
 // Minimum level (0–3) on each skill to qualify for each tier. Monotonic: each tier >= the one below.
-// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1 F2
+// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1
 const TIER_QUAL = [
-  {code:'T1', label:'AI Starter User', lvl:[2,1,1,1,1,1, 1,0,0,0, 1,0, 1,0,0, 0,0, 0,0]},
-  {code:'T2', label:'AI Daily User',   lvl:[3,2,2,2,2,2, 2,1,1,2, 2,0, 2,1,1, 2,1, 1,0]},
-  {code:'T3', label:'AI Power User',   lvl:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2,1]},
-  {code:'T4', label:'AI Champion',     lvl:[3,3,3,3,3,3, 3,3,3,3, 3,3, 3,3,3, 3,3, 3,3]}
+  {code:'T1', label:'AI Starter User', lvl:[2,1,1,1,1,1, 1,0,0,0, 1,0, 1,0,0, 0,0, 0]},
+  {code:'T2', label:'AI Daily User',   lvl:[3,2,2,2,2,2, 2,1,1,2, 2,0, 2,1,1, 2,1, 1]},
+  {code:'T3', label:'AI Power User',   lvl:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
+  {code:'T4', label:'AI Champion',     lvl:[3,3,3,3,3,3, 3,3,3,3, 3,3, 3,3,3, 3,3, 3]}
 ];
 (function renderTierMatrix(){
   const tbl = document.getElementById('tier-matrix-table');
@@ -1152,6 +1170,62 @@ const tableWrap = document.getElementById('assess-table-wrap');
 const gapSummary = document.getElementById('gap-summary');
 const actions = document.getElementById('assess-actions');
 
+// ---- continuous assessment: previous-round state & history ----
+const HIST_KEY = 'wilmarAIAssessHistory_v1';
+let prevScores = null;  // array (length SKILLS) of previous levels, or null
+let prevDate = '';
+function loadHistory(name){
+  try { const h = JSON.parse(localStorage.getItem(HIST_KEY) || '{}'); return h[name] || null; }
+  catch(e){ return null; }
+}
+function saveHistory(name, scores, date){
+  try {
+    const h = JSON.parse(localStorage.getItem(HIST_KEY) || '{}');
+    h[name] = { date: date, scores: scores };
+    localStorage.setItem(HIST_KEY, JSON.stringify(h));
+  } catch(e){ /* storage unavailable */ }
+}
+function setPrevStatus(txt, warn){
+  const el = document.getElementById('prev-status');
+  if (!el) return;
+  el.textContent = txt || '';
+  el.classList.toggle('warn', !!warn);
+}
+function applyPrevColumn(idx){
+  // refresh the Previous cells in place (without wiping entered current scores)
+  SKILLS.forEach((s, i) => {
+    const cell = tableWrap.querySelector(`.prev-cell[data-prev="${i}"]`);
+    if (!cell) return;
+    const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : null;
+    cell.innerHTML = pv != null ? `<span class="req-badge lvl-${pv}">${pv}</span>` : '<span style="color:var(--ink-faint)">—</span>';
+  });
+  updateGaps(idx);
+}
+// read a previously-downloaded plan (.xlsx) and pull its Current column as our Previous
+function parsePrevPlan(arrbuf){
+  const wb = XLSX.read(arrbuf, { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false });
+  let hdr = -1;
+  for (let r = 0; r < aoa.length; r++){ if (aoa[r] && aoa[r].some(c => String(c).trim() === 'Skill')) { hdr = r; break; } }
+  if (hdr < 0) return null;
+  const head = aoa[hdr].map(c => String(c).trim());
+  const skillCol = head.indexOf('Skill');
+  const curCol = head.findIndex(c => /^current/i.test(c));
+  if (skillCol < 0 || curCol < 0) return null;
+  let date = '';
+  for (let r = 0; r < aoa.length; r++){ const k = String(aoa[r][0] || '').trim(); if (k === 'Assessment date' || k === 'Date'){ date = String(aoa[r][1] || '').trim(); break; } }
+  const byCode = {};
+  for (let r = hdr + 1; r < aoa.length; r++){
+    const cell = aoa[r][skillCol]; if (!cell) continue;
+    const code = String(cell).split('·')[0].trim().split(' ')[0].trim();
+    const val = parseInt(aoa[r][curCol], 10);
+    if (code) byCode[code] = isNaN(val) ? null : val;
+  }
+  const scores = SKILLS.map(s => (byCode[s.code] != null ? byCode[s.code] : null));
+  return scores.some(v => v != null) ? { scores, date } : null;
+}
+
 let curOg = null;
 PEOPLE.forEach((p, i) => {
   if (p.fn !== curOg) {
@@ -1171,11 +1245,21 @@ function renderAssess(idx) {
     roleSummary.classList.remove('shown');
     gapSummary.classList.remove('shown');
     actions.style.display = 'none';
+    document.getElementById('prev-bar').style.display = 'none';
+    setPrevStatus('');
     tableWrap.innerHTML = '<div class="empty-state">Select your name above to begin.</div>';
     return;
   }
   const p = PEOPLE[idx];
   const tierObj = TIERS.find(t => t.code === p.tier);
+
+  // load any saved previous round for this person (this browser); Excel import can override
+  const prev = loadHistory(p.name);
+  prevScores = (prev && Array.isArray(prev.scores) && prev.scores.length === SKILLS.length) ? prev.scores.slice() : null;
+  prevDate = prev ? (prev.date || '') : '';
+  document.getElementById('prev-bar').style.display = 'block';
+  setPrevStatus(prevScores ? ('Showing previous from ' + (prevDate || 'last time') + ' — or load a file') : 'First time? Just score yourself below.');
+
   roleSummary.classList.add('shown');
   roleSummary.innerHTML = `
     <span class="meta"><strong>${p.name}</strong></span>
@@ -1183,21 +1267,24 @@ function renderAssess(idx) {
     <span class="meta">Target tier: <span class="tier-pill ${p.tier.toLowerCase()}">${p.tier}</span> <strong>${tierObj.label}</strong></span>`;
 
   let html = `<table class="assess-table"><thead><tr>
-      <th>Skill</th><th class="center">Target</th><th class="center">Your level</th>
-      <th class="center">Gap</th><th class="center">Want to learn</th><th>Note / action</th>
+      <th>Skill</th><th class="center">Target</th><th class="center">Previous</th><th class="center">Your level</th>
+      <th class="center">Change</th><th class="center">Gap</th><th class="center">Want to learn</th><th>Note / action</th>
     </tr></thead><tbody>`;
   let lastCat = null;
   SKILLS.forEach((s, i) => {
     if (s.cat !== lastCat) {
-      html += `<tr class="cat-row"><td colspan="6">${s.cat} · ${s.catName}</td></tr>`;
+      html += `<tr class="cat-row"><td colspan="8">${s.cat} · ${s.catName}</td></tr>`;
       lastCat = s.cat;
     }
     const tgt = p.tgt[i];
+    const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : null;
     html += `<tr>
       <td><div class="skill-cell"><span class="skill-cell-name">${s.name}</span>
         <span class="skill-cell-res">${s.code} · <a href="${s.res.url}" target="_blank" rel="noopener">${s.res.label}</a>${s.res2 ? ` · <a href="${s.res2.url}" target="_blank" rel="noopener">${s.res2.label}</a>` : ''}${s.res3 ? ` · <a href="${s.res3.url}" target="_blank" rel="noopener">${s.res3.label}</a>` : ''}</span></div></td>
       <td class="center"><span class="req-badge lvl-${tgt}">${tgt}</span></td>
+      <td class="center prev-cell" data-prev="${i}">${pv != null ? `<span class="req-badge lvl-${pv}">${pv}</span>` : '<span style="color:var(--ink-faint)">—</span>'}</td>
       <td class="center"><input type="number" min="0" max="4" class="level-input" data-idx="${i}" placeholder="–"></td>
+      <td class="center change-cell" data-change="${i}">—</td>
       <td class="center gap-cell" data-gap="${i}">—</td>
       <td class="center"><input type="checkbox" class="want-box" data-want="${i}"></td>
       <td><input type="text" class="level-input plan-note" data-note="${i}" style="width:100%;text-align:left;font-family:var(--sans);font-size:13px;padding:7px 10px" placeholder="Action…"></td>
@@ -1214,7 +1301,7 @@ function renderAssess(idx) {
 
 function updateGaps(idx) {
   const p = PEOPLE[idx];
-  let below=0, at=0, above=0, assessed=0;
+  let below=0, at=0, above=0, assessed=0, improved=0;
   const priorities = [];
   tableWrap.querySelectorAll('tbody tr').forEach(tr => {
     const inp = tr.querySelector('.level-input[type="number"]');
@@ -1222,35 +1309,50 @@ function updateGaps(idx) {
     const i = parseInt(inp.dataset.idx, 10);
     const tgt = p.tgt[i];
     const gapCell = tr.querySelector('.gap-cell');
+    const changeCell = tr.querySelector('.change-cell');
     const v = parseInt(inp.value, 10);
     const wants = tr.querySelector('.want-box').checked;
+    const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : null;
+
+    // Change vs previous round
+    if (changeCell) {
+      if (!isNaN(v) && pv != null) {
+        const ch = v - pv;
+        if (ch > 0) { changeCell.textContent = ch; changeCell.className='center change-cell gap-pos'; improved++; }
+        else if (ch < 0) { changeCell.textContent = ch; changeCell.className='center change-cell gap-neg'; }
+        else { changeCell.textContent='0'; changeCell.className='center change-cell gap-zero'; }
+      } else { changeCell.textContent='—'; changeCell.className='center change-cell'; }
+    }
+
     if (isNaN(v)) {
       gapCell.textContent = '—'; gapCell.className = 'center gap-cell';
-      if (wants) priorities.push(SKILLS[i].name + ' (wants to learn)');
+      if (wants) priorities.push(SKILLS[i].name);
       return;
     }
     assessed++;
     const gap = v - tgt;
     gapCell.classList.remove('gap-pos','gap-neg','gap-zero');
     if (gap > 0) { gapCell.textContent = gap; gapCell.className='center gap-cell gap-pos'; above++; }
-    else if (gap < 0) { gapCell.textContent = gap; gapCell.className='center gap-cell gap-neg'; below++; priorities.push(SKILLS[i].name + ` (${v}→${tgt})`); }
+    else if (gap < 0) { gapCell.textContent = gap; gapCell.className='center gap-cell gap-neg'; below++; }
     else { gapCell.textContent='0'; gapCell.className='center gap-cell gap-zero'; at++; }
-    if (gap >= 0 && wants && !priorities.includes(SKILLS[i].name)) priorities.push(SKILLS[i].name + ' (wants to learn)');
+    if (wants) priorities.push(SKILLS[i].name + (gap < 0 ? ` (${v}→${tgt})` : ''));
   });
 
   if (assessed === 0 && priorities.length === 0) { gapSummary.classList.remove('shown'); return; }
   gapSummary.classList.add('shown');
   let pr = '';
   if (priorities.length) {
-    pr = `<div class="priorities"><strong>Focus next:</strong><ul>` +
+    pr = `<div class="priorities"><strong>Want to learn — focus next:</strong><ul>` +
       priorities.slice(0,8).map(x => `<li>${x}</li>`).join('') + `</ul></div>`;
   }
+  const impStat = prevScores ? `<span class="stat"><strong>${improved}</strong>improved since last time</span>` : '';
   gapSummary.innerHTML = `
     <h4>Gap analysis — ${p.name}</h4>
     <span class="stat"><strong>${assessed}</strong>/ ${SKILLS.length} scored</span>
     <span class="stat"><strong>${below}</strong>below target</span>
     <span class="stat"><strong>${at}</strong>at target</span>
     <span class="stat"><strong>${above}</strong>above target</span>
+    ${impStat}
     ${pr}`;
 }
 
@@ -1260,39 +1362,49 @@ function resetAssess() { renderAssess(personSelect.value); }
 function buildPlanRows(idx){
   const p = PEOPLE[idx];
   const tierObj = TIERS.find(t => t.code === p.tier) || {label:''};
-  const date = (document.getElementById('assess-date').value || '').trim() || new Date().toLocaleDateString();
+  const date = new Date().toLocaleDateString();
   const rows = [];
   rows.push(['AI Skills Development Plan']);
   rows.push(['Name', p.name]);
   rows.push(['Role', p.role]);
   rows.push(['Target tier', p.tier + ' — ' + tierObj.label]);
-  rows.push(['Date', date]);
+  rows.push(['Assessment date', date]);
+  rows.push(['Previous assessment', prevDate || '—']);
   rows.push([]);
-  rows.push(['Category','Skill','Current (0-4)','Target','Gap','Status','Want to learn','Recommended resource','Resource link','Notes / action']);
+  rows.push(['Category','Skill','Target','Previous','Previous date','Current','Change','Gap','Status','Want to learn','Recommended resource','Resource link','Notes / action']);
   SKILLS.forEach((s, i) => {
     const ci = document.querySelector(`.level-input[data-idx="${i}"]`);
     const cur = ci ? parseInt(ci.value, 10) : NaN;
     const tgt = p.tgt[i];
+    const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : '';
     const wbox = document.querySelector(`.want-box[data-want="${i}"]`);
     const want = wbox && wbox.checked ? 'Yes' : '';
     const nt = document.querySelector(`.plan-note[data-note="${i}"]`);
     const note = nt ? nt.value : '';
-    let gap = '', status = 'Not scored yet';
+    let gap = '', status = 'Not scored yet', change = '';
     if (!isNaN(cur)) { gap = cur - tgt; status = gap < 0 ? 'Below target — develop' : (gap > 0 ? 'Above target' : 'At target'); }
+    if (!isNaN(cur) && pv !== '') change = cur - pv;
     const link = s.res.url.charAt(0) === '#' ? '' : s.res.url;
-    rows.push([s.catName, s.code + ' · ' + s.name, isNaN(cur) ? '' : cur, tgt, gap, status, want, s.res.label, link, note]);
+    rows.push([s.catName, s.code + ' · ' + s.name, tgt, pv, (pv !== '' ? (prevDate || '') : ''), isNaN(cur) ? '' : cur, change, gap, status, want, s.res.label, link, note]);
   });
   return { person: p, rows };
 }
 
 function downloadPlan(){
   if (personSelect.value === '') { setSaveStatus('Pick your name first ⚠', true); return; }
-  const { person, rows } = buildPlanRows(personSelect.value);
+  const idx = personSelect.value;
+  const { person, rows } = buildPlanRows(idx);
+  // remember this round so it becomes the "previous" next time (this browser)
+  const now = new Date();
+  const date = now.toLocaleDateString();
+  const ym = '' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0');
+  const scores = SKILLS.map((s, i) => { const ci = document.querySelector(`.level-input[data-idx="${i}"]`); const v = ci ? parseInt(ci.value, 10) : NaN; return isNaN(v) ? null : v; });
+  saveHistory(person.name, scores, date);
   const safeName = person.name.replace(/[\\/:*?"<>|]/g, '');
-  const fname = 'AI Skills Plan - ' + safeName;
+  const fname = 'AI Skills Plan - ' + safeName + ' - ' + ym;
   if (typeof XLSX !== 'undefined') {
     const ws = XLSX.utils.aoa_to_sheet(rows);
-    ws['!cols'] = [{wch:26},{wch:42},{wch:12},{wch:8},{wch:6},{wch:22},{wch:13},{wch:34},{wch:54},{wch:30}];
+    ws['!cols'] = [{wch:24},{wch:40},{wch:8},{wch:9},{wch:14},{wch:9},{wch:8},{wch:6},{wch:22},{wch:13},{wch:32},{wch:50},{wch:28}];
     const wbk = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wbk, ws, 'Development Plan');
     XLSX.writeFile(wbk, fname + '.xlsx');
@@ -1314,13 +1426,34 @@ function downloadPlan(){
 }
 personSelect.addEventListener('change', e => renderAssess(e.target.value));
 
+// Load a previously-downloaded plan (.xlsx) to populate the Previous column
+document.getElementById('prev-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (personSelect.value === '') { setPrevStatus('Pick your name first ⚠', true); e.target.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = parsePrevPlan(new Uint8Array(reader.result));
+      if (!parsed) { setPrevStatus('⚠ Couldn’t read scores from that file', true); return; }
+      prevScores = parsed.scores;
+      prevDate = parsed.date || prevDate;
+      saveHistory(PEOPLE[personSelect.value].name, prevScores, prevDate);
+      applyPrevColumn(personSelect.value);
+      setPrevStatus('Loaded previous' + (prevDate ? ' from ' + prevDate : '') + ' ✓');
+    } catch(err) { setPrevStatus('⚠ Invalid Excel file', true); }
+  };
+  reader.readAsArrayBuffer(file);
+  e.target.value = '';
+});
+
 // =========== RENDER: LEARNING PATHS ===========
 const pathGrid = document.getElementById('path-grid');
 PATHS.forEach(p => {
   const c = document.createElement('div');
   c.className = 'path-card';
   let steps = p.steps.map(s => `<li><b>${s[0]}.</b> ${s[1]}</li>`).join('');
-  c.innerHTML = `<h3>${p.title}</h3><div class="who">${p.who}</div><ol>${steps}</ol>`;
+  c.innerHTML = `<h3>${p.title}</h3>${p.who ? `<div class="who">${p.who}</div>` : ''}<ol>${steps}</ol>`;
   pathGrid.appendChild(c);
 });
 
@@ -1368,19 +1501,23 @@ TOOLS.forEach(t => {
   if (!tbl) return;
   const thead = document.createElement('thead');
   const htr = document.createElement('tr');
-  htr.innerHTML = `<th class="role-col">Task</th>` + TOOL_COLS.map(c => `<th class="skill-col" style="min-width:96px">${c}</th>`).join('');
+  htr.innerHTML = `<th class="role-col" style="min-width:150px">Category</th><th class="role-col" style="min-width:200px">Task</th>` + TOOL_COLS.map(c => `<th class="skill-col" style="min-width:96px">${c}</th>`).join('');
   thead.appendChild(htr);
   tbl.appendChild(thead);
   const tb = document.createElement('tbody');
-  TOOL_TASKS.forEach(row => {
-    const tr = document.createElement('tr');
-    let html = `<td class="task-col">${row.task}</td>`;
-    row.cells.forEach(sym => {
-      const cls = sym === '★' ? 'cap-best' : (sym === '✓' ? 'cap-yes' : 'cap-no');
-      html += `<td class="lvl ${cls}">${sym}</td>`;
+  TOOL_GROUPS.forEach(group => {
+    group.tasks.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      let html = '';
+      if (i === 0) html += `<td class="task-col cat-col" rowspan="${group.tasks.length}">${group.cat}</td>`;
+      html += `<td class="task-col">${row.task}</td>`;
+      row.cells.forEach(sym => {
+        const cls = sym === '★' ? 'cap-best' : (sym === '✓' ? 'cap-yes' : 'cap-no');
+        html += `<td class="lvl ${cls}">${sym}</td>`;
+      });
+      tr.innerHTML = html;
+      tb.appendChild(tr);
     });
-    tr.innerHTML = html;
-    tb.appendChild(tr);
   });
   tbl.appendChild(tb);
 })();
