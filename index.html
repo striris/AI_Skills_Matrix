@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wilmar Sugar AI Hub</title>
+<title>Wilmar AI Hub</title>
 <style>
   :root {
     /* Light theme — #004655 / #749993 / #8E8E7B on near-white */
@@ -317,7 +317,7 @@
 
   /* -------- SELF-ASSESSMENT -------- */
   .assess { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 28px 32px; }
-  .assess-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .assess-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
   .field-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); display: block; margin-bottom: 6px; font-weight: 500; }
   .field input, .field select {
     width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px;
@@ -329,6 +329,13 @@
   .role-summary.shown { display: block; }
   .role-summary strong { color: var(--green-900); font-weight: 500; }
   .role-summary .meta { display: inline-flex; align-items: center; gap: 10px; margin-right: 16px; }
+  .section-header.with-link { justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .section-link {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--green-700); text-decoration: none; border: 1px solid var(--green-200);
+    background: var(--green-50); padding: 6px 10px; border-radius: 999px; white-space: nowrap;
+  }
+  .section-link:hover { background: var(--green-100); }
   table.assess-table { width: 100%; border-collapse: collapse; font-size: 14px; }
   table.assess-table th { text-align: left; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); padding: 8px 8px; border-bottom: 1px solid var(--line); font-weight: 500; }
   table.assess-table th.center { text-align: center; }
@@ -459,8 +466,8 @@
   <header class="masthead">
     <div>
       <div class="eyebrow">AI Enablement Program</div>
-      <h1 class="title">Wilmar Sugar <em>AI Hub</em></h1>
-      <p class="lede">One home for our team's AI journey — a skills matrix to map and grow what you can do, a tools matrix to pick the right tool for each task, and a training calendar for the sessions ahead.</p>
+      <h1 class="title">Wilmar <em>AI Hub</em></h1>
+      <p class="lede">One home for our AI journey — a skills matrix to map and grow what you can do, a tools matrix to pick the right tool for each task, and a training calendar for the sessions ahead.</p>
     </div>
     <aside class="source-card">
       <strong>What's inside</strong>
@@ -475,6 +482,7 @@
     <button class="hub-tab active" data-view="skills"><span class="tab-num">01</span> AI Skills Matrix</button>
     <button class="hub-tab" data-view="tools"><span class="tab-num">02</span> AI Tools Matrix</button>
     <button class="hub-tab" data-view="calendar"><span class="tab-num">03</span> AI Training Calendar</button>
+    <button class="hub-tab" data-view="cafe"><span class="tab-num">04</span> Wilmar AI Cafe</button>
   </div>
 
   <!-- ============================================================ -->
@@ -498,7 +506,7 @@
     <ol>
       <li><b>Read the tiers &amp; skills</b> — see what each level looks like and the 20 skills that make it up.</li>
       <li><b>Check the target matrix</b> — find the target level set for your role on each skill.</li>
-      <li><b>Self-assess</b> — pick your name, score yourself 0–4, and tick what you want to learn.</li>
+      <li><b>Self-assess</b> — enter your name, job title and tier, then score yourself 0–4 and tick what you want to learn.</li>
       <li><b>Follow your learning path</b> — close the gaps using the curated resources, then save your development plan.</li>
     </ol>
   </div>
@@ -540,12 +548,26 @@
   <!-- ==================== ASSESS ==================== -->
   <section id="assess">
     <div class="section-header"><span class="section-num">04</span><h2>Your self-assessment &amp; gap analysis</h2></div>
-    <p class="section-intro">This is a <strong>repeatable assessment</strong> — do it now, then again in about six months to track your progress. Pick your name and (if you've done it before) <strong>load your previous plan</strong> to see how far you've come. Enter your <strong>current level (0–4)</strong> for each skill and tick <strong>"want to learn"</strong> for anything you'd like to develop. Click <strong>Save development plan</strong> to download an Excel — keep it as your record for next time.</p>
+    <p class="section-intro">This is a <strong>repeatable assessment</strong> — do it now, then again in about six months to track your progress. Enter your name, job title and tier, then (if you've done it before) <strong>load your previous plan</strong> to see how far you've come. Enter your <strong>current level (0–4)</strong> for each skill and tick <strong>"want to learn"</strong> for anything you'd like to develop. Click <strong>Save development plan</strong> to download an Excel — keep it as your record for next time.</p>
     <div class="assess">
-      <div class="assess-controls" style="grid-template-columns:1fr">
+      <div class="assess-controls">
         <div class="field">
-          <label class="field-label" for="assess-person">Your name</label>
-          <select id="assess-person"><option value="">— Select your name —</option></select>
+          <label class="field-label" for="assess-name">Your name</label>
+          <input type="text" id="assess-name" placeholder="Enter your name">
+        </div>
+        <div class="field">
+          <label class="field-label" for="assess-role">Job title</label>
+          <input type="text" id="assess-role" placeholder="Enter your job title">
+        </div>
+        <div class="field">
+          <label class="field-label" for="assess-tier">Tier</label>
+          <select id="assess-tier">
+            <option value="">— Select your tier —</option>
+            <option value="T1">T1 — AI Starter User</option>
+            <option value="T2">T2 — AI Daily User</option>
+            <option value="T3">T3 — AI Power User</option>
+            <option value="T4">T4 — AI Champion</option>
+          </select>
         </div>
       </div>
       <div class="role-summary" id="role-summary"></div>
@@ -554,7 +576,7 @@
         <input type="file" id="prev-file" accept=".xlsx,.xls" style="display:none">
         <span class="save-status" id="prev-status"></span>
       </div>
-      <div id="assess-table-wrap"><div class="empty-state">Select your name above to begin.</div></div>
+      <div id="assess-table-wrap"><div class="empty-state">Enter your details above to begin.</div></div>
       <div class="gap-summary" id="gap-summary"></div>
       <div id="assess-actions" style="display:none;">
         <button class="btn" onclick="downloadPlan()">⬇ Save &amp; email development plan</button>
@@ -680,15 +702,30 @@
     </section>
 
     <section>
-      <div class="section-header"><span class="section-num">B</span><h2>Internal training ideas</h2></div>
+      <div class="section-header with-link"><span class="section-num">B</span><h2>Internal training ideas</h2><a class="section-link" href="https://striris.github.io/Wilmar-AI-Cafe/" target="_blank" rel="noopener">Wilmar AI Cafe</a></div>
       <p class="section-intro">Short, hands-on sessions tailored to real trading workflows. Run them as 45–60 min lunch-and-learns; each ends with everyone shipping one small thing. Confirmed sessions move up into the calendar above. Explore more ideas and resources at the <a href="https://striris.github.io/Wilmar-AI-Cafe/" target="_blank" rel="noopener" style="color:var(--green-600);border-bottom:1px dotted var(--green-300);text-decoration:none">Wilmar AI Café</a>.</p>
       <div class="train-grid" id="train-grid"></div>
     </section>
 
   </div><!-- /view-calendar -->
 
+  <!-- ============================================================ -->
+  <!-- ==================== VIEW 4: CAFE ========================== -->
+  <!-- ============================================================ -->
+  <div class="view" id="view-cafe">
+    <section style="margin-bottom:48px">
+      <div class="section-header"><span class="section-num">A</span><h2>Wilmar AI Cafe</h2></div>
+      <p class="section-intro">A companion space for prompts, ideas and practical AI examples.</p>
+      <div class="how-to" style="max-width:780px;margin-bottom:0">
+        <h3>Open the cafe</h3>
+        <p style="font-size:14px;color:var(--ink-soft)">Visit the Wilmar AI Cafe for the companion hub:</p>
+        <p style="margin-top:10px"><a href="https://striris.github.io/Wilmar-AI-Cafe/" target="_blank" rel="noopener" style="color:var(--green-600);border-bottom:1px dotted var(--green-300);text-decoration:none">https://striris.github.io/Wilmar-AI-Cafe/</a></p>
+      </div>
+    </section>
+  </div><!-- /view-cafe -->
+
   <footer>
-    <span>Wilmar Sugar AI Hub · prepared for team upskilling</span>
+    <span>Wilmar AI Hub · prepared for team upskilling</span>
     <span>Levels 0–4 · Resources verified Jun 2026</span>
   </footer>
 
@@ -750,33 +787,8 @@ const SKILLS = [];
 CATS.forEach(c => c.skills.forEach(s => SKILLS.push({...s, cat:c.code, catName:c.name})));
 const SKILL_KEYS = SKILLS.map(s => s.code);
 
-// =========== PEOPLE (targets in SKILL_KEYS order) ===========
-// Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1  (18 skills)
-const PEOPLE = [
-  {fn:'MIDDLE OFFICE', name:'Vishesh Kathuria', role:'Group Controller', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'MIDDLE OFFICE', name:'Chong Yean Mui', role:'Head of Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'MIDDLE OFFICE', name:'Lim Kai Shean', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'MIDDLE OFFICE', name:'Poh Wei Min', role:'Middle Office', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-
-  {fn:'PnL', name:'Berilyn Chia Zi Hui', role:'PnL', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-
-  {fn:'RAW SUGAR RISK', name:'Pang Siew Kim', role:'Raw Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'RAW SUGAR RISK', name:'Clare Choo Chui Ling', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'RAW SUGAR RISK', name:'JR Boholst Animas', role:'Raw Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-
-  {fn:'WHITE SUGAR RISK', name:'Sharin Poy Mei Ling', role:'White Sugar Risk Head', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]},
-  {fn:'WHITE SUGAR RISK', name:'Ida Yeung Pui Yan', role:'White Sugar Risk', tier:'T3',
-   tgt:[3,3,3,3,3,3, 3,3,2,3, 3,2, 3,2,2, 3,2, 2]}
-];
+// =========== TIER TARGETS ==========
+const TIER_TARGETS = Object.fromEntries(TIER_QUAL.map(t => [t.code, t.lvl]));
 
 // =========== TARGET PERSISTENCE (saves edits in this browser) ===========
 function clampLvl(v){ v = parseInt(v,10); if (isNaN(v)) return null; return Math.max(0, Math.min(4, v)); }
@@ -1019,24 +1031,44 @@ const TIER_QUAL = [
 })();
 
 // =========== SELF-ASSESSMENT ===========
-const personSelect = document.getElementById('assess-person');
+const nameInput = document.getElementById('assess-name');
+const roleInput = document.getElementById('assess-role');
+const tierSelect = document.getElementById('assess-tier');
 const roleSummary = document.getElementById('role-summary');
 const tableWrap = document.getElementById('assess-table-wrap');
 const gapSummary = document.getElementById('gap-summary');
 const actions = document.getElementById('assess-actions');
 
 // ---- continuous assessment: previous-round state & history ----
-const HIST_KEY = 'wilmarAIAssessHistory_v1';
+const HIST_KEY = 'wilmarAIAssessHistory_v2';
 let prevScores = null;  // array (length SKILLS) of previous levels, or null
 let prevDate = '';
-function loadHistory(name){
-  try { const h = JSON.parse(localStorage.getItem(HIST_KEY) || '{}'); return h[name] || null; }
+let currentAssess = null;
+function getAssessContext(){
+  const name = nameInput ? nameInput.value.trim() : '';
+  const role = roleInput ? roleInput.value.trim() : '';
+  const tier = tierSelect ? tierSelect.value : '';
+  const targets = tier ? TIER_TARGETS[tier] : null;
+  const tierObj = tier ? TIER_QUAL.find(t => t.code === tier) : null;
+  const ready = !!(name && role && tier && targets && tierObj);
+  return {
+    name,
+    role,
+    tier,
+    ready,
+    key: ready ? [name, role, tier].map(v => String(v).trim().toLowerCase()).join(' | ') : '',
+    tierObj,
+    targets
+  };
+}
+function loadHistory(key){
+  try { const h = JSON.parse(localStorage.getItem(HIST_KEY) || '{}'); return h[key] || null; }
   catch(e){ return null; }
 }
-function saveHistory(name, scores, date){
+function saveHistory(key, scores, date){
   try {
     const h = JSON.parse(localStorage.getItem(HIST_KEY) || '{}');
-    h[name] = { date: date, scores: scores };
+    h[key] = { date: date, scores: scores };
     localStorage.setItem(HIST_KEY, JSON.stringify(h));
   } catch(e){ /* storage unavailable */ }
 }
@@ -1046,7 +1078,7 @@ function setPrevStatus(txt, warn){
   el.textContent = txt || '';
   el.classList.toggle('warn', !!warn);
 }
-function applyPrevColumn(idx){
+function applyPrevColumn(){
   // refresh the Previous cells in place (without wiping entered current scores)
   SKILLS.forEach((s, i) => {
     const cell = tableWrap.querySelector(`.prev-cell[data-prev="${i}"]`);
@@ -1054,7 +1086,7 @@ function applyPrevColumn(idx){
     const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : null;
     cell.innerHTML = pv != null ? `<span class="req-badge lvl-${pv}">${pv}</span>` : '<span style="color:var(--ink-faint)">—</span>';
   });
-  updateGaps(idx);
+  updateGaps();
 }
 // read a previously-downloaded plan (.xlsx) and pull its Current column as our Previous
 function parsePrevPlan(arrbuf){
@@ -1081,35 +1113,22 @@ function parsePrevPlan(arrbuf){
   return scores.some(v => v != null) ? { scores, date } : null;
 }
 
-let curOg = null;
-PEOPLE.forEach((p, i) => {
-  if (p.fn !== curOg) {
-    const og = document.createElement('optgroup');
-    og.label = p.fn;
-    personSelect.appendChild(og);
-    curOg = p.fn;
-  }
-  const opt = document.createElement('option');
-  opt.value = i;
-  opt.textContent = `${p.name} — ${p.role}`;
-  personSelect.lastChild.appendChild(opt);
-});
-
-function renderAssess(idx) {
-  if (idx === '' || idx === null) {
+function renderAssess() {
+  const ctx = getAssessContext();
+  currentAssess = ctx.ready ? ctx : null;
+  if (!ctx.ready) {
     roleSummary.classList.remove('shown');
     gapSummary.classList.remove('shown');
     actions.style.display = 'none';
     document.getElementById('prev-bar').style.display = 'none';
     setPrevStatus('');
-    tableWrap.innerHTML = '<div class="empty-state">Select your name above to begin.</div>';
+    tableWrap.innerHTML = '<div class="empty-state">Enter your details above to begin.</div>';
     return;
   }
-  const p = PEOPLE[idx];
-  const tierObj = TIERS.find(t => t.code === p.tier);
+  const tierObj = ctx.tierObj;
 
   // load any saved previous round for this person (this browser); Excel import can override
-  const prev = loadHistory(p.name);
+  const prev = loadHistory(ctx.key);
   prevScores = (prev && Array.isArray(prev.scores) && prev.scores.length === SKILLS.length) ? prev.scores.slice() : null;
   prevDate = prev ? (prev.date || '') : '';
   document.getElementById('prev-bar').style.display = 'block';
@@ -1117,9 +1136,9 @@ function renderAssess(idx) {
 
   roleSummary.classList.add('shown');
   roleSummary.innerHTML = `
-    <span class="meta"><strong>${p.name}</strong></span>
-    <span class="meta">Role: <strong>${p.role}</strong></span>
-    <span class="meta">Target tier: <span class="tier-pill ${p.tier.toLowerCase()}">${p.tier}</span> <strong>${tierObj.label}</strong></span>`;
+    <span class="meta"><strong>${ctx.name}</strong></span>
+    <span class="meta">Job title: <strong>${ctx.role}</strong></span>
+    <span class="meta">Target tier: <span class="tier-pill ${ctx.tier.toLowerCase()}">${ctx.tier}</span> <strong>${tierObj.label}</strong></span>`;
 
   let html = `<table class="assess-table"><thead><tr>
       <th>Skill</th><th class="center">Target</th><th class="center">Previous</th><th class="center">Your level</th>
@@ -1131,7 +1150,7 @@ function renderAssess(idx) {
       html += `<tr class="cat-row"><td colspan="8">${s.cat} · ${s.catName}</td></tr>`;
       lastCat = s.cat;
     }
-    const tgt = p.tgt[i];
+    const tgt = ctx.targets[i];
     const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : null;
     html += `<tr>
       <td><div class="skill-cell"><span class="skill-cell-name">${s.name}</span>
@@ -1149,20 +1168,21 @@ function renderAssess(idx) {
   tableWrap.innerHTML = html;
   actions.style.display = 'block';
 
-  tableWrap.querySelectorAll('.level-input[type="number"]').forEach(inp => inp.addEventListener('input', () => updateGaps(idx)));
-  tableWrap.querySelectorAll('.want-box').forEach(cb => cb.addEventListener('change', () => updateGaps(idx)));
-  updateGaps(idx);
+  tableWrap.querySelectorAll('.level-input[type="number"]').forEach(inp => inp.addEventListener('input', () => updateGaps()));
+  tableWrap.querySelectorAll('.want-box').forEach(cb => cb.addEventListener('change', () => updateGaps()));
+  updateGaps();
 }
 
-function updateGaps(idx) {
-  const p = PEOPLE[idx];
+function updateGaps() {
+  const p = currentAssess || getAssessContext();
+  if (!p.ready) return;
   let below=0, at=0, above=0, assessed=0, improved=0;
   const priorities = [];
   tableWrap.querySelectorAll('tbody tr').forEach(tr => {
     const inp = tr.querySelector('.level-input[type="number"]');
     if (!inp) return; // cat-row
     const i = parseInt(inp.dataset.idx, 10);
-    const tgt = p.tgt[i];
+    const tgt = p.targets[i];
     const gapCell = tr.querySelector('.gap-cell');
     const changeCell = tr.querySelector('.change-cell');
     const v = parseInt(inp.value, 10);
@@ -1211,12 +1231,12 @@ function updateGaps(idx) {
     ${pr}`;
 }
 
-function resetAssess() { renderAssess(personSelect.value); }
+function resetAssess() { renderAssess(); }
 
 // =========== SAVE DEVELOPMENT PLAN (Excel / CSV) ===========
-function buildPlanRows(idx){
-  const p = PEOPLE[idx];
-  const tierObj = TIERS.find(t => t.code === p.tier) || {label:''};
+function buildPlanRows(){
+  const p = currentAssess || getAssessContext();
+  const tierObj = p.tierObj || {label:''};
   const date = new Date().toLocaleDateString();
   const rows = [];
   rows.push(['AI Skills Development Plan']);
@@ -1231,7 +1251,7 @@ function buildPlanRows(idx){
   SKILLS.forEach((s, i) => {
     const ci = document.querySelector(`.level-input[data-idx="${i}"]`);
     const cur = ci ? parseInt(ci.value, 10) : NaN;
-    const tgt = p.tgt[i];
+    const tgt = p.targets[i];
     const pv = prevScores && prevScores[i] != null && !isNaN(prevScores[i]) ? prevScores[i] : '';
     const wbox = document.querySelector(`.want-box[data-want="${i}"]`);
     const want = wbox && wbox.checked ? 'Yes' : '';
@@ -1256,15 +1276,16 @@ function emailPlan(person, ym, fileLabel){
 }
 
 function downloadPlan(){
-  if (personSelect.value === '') { setSaveStatus('Pick your name first ⚠', true); return; }
-  const idx = personSelect.value;
-  const { person, rows, belowRows } = buildPlanRows(idx);
+  const ctx = getAssessContext();
+  if (!ctx.ready) { setSaveStatus('Enter your details first ⚠', true); return; }
+  currentAssess = ctx;
+  const { person, rows, belowRows } = buildPlanRows();
   // remember this round so it becomes the "previous" next time (this browser)
   const now = new Date();
   const date = now.toLocaleDateString();
   const ym = '' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0');
   const scores = SKILLS.map((s, i) => { const ci = document.querySelector(`.level-input[data-idx="${i}"]`); const v = ci ? parseInt(ci.value, 10) : NaN; return isNaN(v) ? null : v; });
-  saveHistory(person.name, scores, date);
+  saveHistory(person.key, scores, date);
   const safeName = person.name.replace(/[\\/:*?"<>|]/g, '');
   const fname = 'AI Skills Plan - ' + safeName + ' - ' + ym;
   let fileExt = 'csv';
@@ -1303,13 +1324,16 @@ function downloadPlan(){
   }
   emailPlan(person, ym, fname + '.' + fileExt);
 }
-personSelect.addEventListener('change', e => renderAssess(e.target.value));
+nameInput.addEventListener('input', () => renderAssess());
+roleInput.addEventListener('input', () => renderAssess());
+tierSelect.addEventListener('change', () => renderAssess());
 
 // Load a previously-downloaded plan (.xlsx) to populate the Previous column
 document.getElementById('prev-file').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  if (personSelect.value === '') { setPrevStatus('Pick your name first ⚠', true); e.target.value = ''; return; }
+  const ctx = getAssessContext();
+  if (!ctx.ready) { setPrevStatus('Enter your details first ⚠', true); e.target.value = ''; return; }
   const reader = new FileReader();
   reader.onload = () => {
     try {
@@ -1317,8 +1341,9 @@ document.getElementById('prev-file').addEventListener('change', (e) => {
       if (!parsed) { setPrevStatus('⚠ Couldn’t read scores from that file', true); return; }
       prevScores = parsed.scores;
       prevDate = parsed.date || prevDate;
-      saveHistory(PEOPLE[personSelect.value].name, prevScores, prevDate);
-      applyPrevColumn(personSelect.value);
+      currentAssess = ctx;
+      saveHistory(ctx.key, prevScores, prevDate);
+      applyPrevColumn();
       setPrevStatus('Loaded previous' + (prevDate ? ' from ' + prevDate : '') + ' ✓');
     } catch(err) { setPrevStatus('⚠ Invalid Excel file', true); }
   };
@@ -1415,7 +1440,8 @@ const hubTabs = document.querySelectorAll('.hub-tab');
 const views = {
   skills: document.getElementById('view-skills'),
   tools: document.getElementById('view-tools'),
-  calendar: document.getElementById('view-calendar')
+  calendar: document.getElementById('view-calendar'),
+  cafe: document.getElementById('view-cafe')
 };
 function showView(name){
   Object.entries(views).forEach(([k, el]) => el.classList.toggle('active', k === name));
