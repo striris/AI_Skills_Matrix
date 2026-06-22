@@ -519,24 +519,11 @@
 
   <!-- ==================== MATRIX ==================== -->
   <section id="matrix">
-    <div class="section-header"><span class="section-num">03</span><h2>Target matrices</h2></div>
+    <div class="section-header"><span class="section-num">03</span><h2>Target matrix</h2></div>
 
     <h3 class="matrix-subhead">Tier qualification — minimum level on each skill to reach each tier</h3>
     <p class="section-intro" style="max-width:840px">To qualify for a tier you need at least these levels across the skills; each higher tier builds on the ones below it. Tier 3 (AI Power User) is the current team target, and Tier 4 (AI Champion) is the opt-in stretch goal. Hover a skill code for its name.</p>
-    <div class="matrix-wrap" style="margin-bottom:30px"><div class="matrix-scroll"><table class="matrix" id="tier-matrix-table"></table></div></div>
-
-    <h3 class="matrix-subhead">Individual targets — by person</h3>
-    <p class="section-intro">Each cell is the <strong>target level</strong> for that person and skill, based on their role. Levels run 0–4 (4 = Coach); right now nobody is targeted above 3. These are targets to aim for, not current ability — that comes from the self-assessment.</p>
-    <div class="edit-bar">
-      <button class="btn" id="edit-toggle">✎ Edit targets</button>
-      <button class="btn secondary" id="export-targets">Export backup</button>
-      <label class="btn secondary" for="import-targets" style="cursor:pointer;display:inline-block">Import backup</label>
-      <input type="file" id="import-targets" accept="application/json,.json" style="display:none">
-      <button class="btn secondary" id="reset-targets">Reset to defaults</button>
-      <span class="save-status" id="save-status"></span>
-    </div>
-    <p class="edit-hint" id="edit-hint" style="display:none">Click any cell and type a number 0–4. Changes save to this browser automatically. Use <strong>Export backup</strong> to keep a copy or move your edits to another computer.</p>
-    <div class="matrix-wrap"><div class="matrix-scroll"><table class="matrix" id="matrix-table"></table></div></div>
+    <div class="matrix-wrap"><div class="matrix-scroll"><table class="matrix" id="tier-matrix-table"></table></div></div>
     <div class="matrix-legend">
       <div class="legend-group">
         <span class="legend-label">Level</span>
@@ -573,6 +560,7 @@
         <button class="btn" onclick="downloadPlan()">⬇ Save &amp; email development plan</button>
         <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
         <button class="btn secondary" onclick="resetAssess()">Reset scores</button>
+        <span class="save-status" id="save-status" style="margin-left:8px"></span>
         <p class="edit-hint" style="margin-top:12px">This downloads your Excel and opens an email to Xinran (xinran.liu@sg.wilmar-intl.com). Just <strong>attach the downloaded file</strong> and click send.</p>
       </div>
     </div>
@@ -695,7 +683,7 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx-js-style.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';document.head.appendChild(s);"></script>
 <script>
 // =========== TIERS ===========
 const TIERS = [
@@ -780,10 +768,6 @@ const PEOPLE = [
 ];
 
 // =========== TARGET PERSISTENCE (saves edits in this browser) ===========
-const STORE_KEY = 'wilmarAISkillsTargets_v6';
-const DEFAULT_TGT = {};
-PEOPLE.forEach(p => DEFAULT_TGT[p.name] = p.tgt.slice());
-
 function clampLvl(v){ v = parseInt(v,10); if (isNaN(v)) return null; return Math.max(0, Math.min(4, v)); }
 
 function setSaveStatus(txt, warn){
@@ -792,38 +776,6 @@ function setSaveStatus(txt, warn){
   el.textContent = txt || '';
   el.classList.toggle('warn', !!warn);
 }
-let saveTimer = null;
-function flashSaved(){
-  setSaveStatus('Saved ✓');
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => setSaveStatus(editMode ? 'Editing — changes save automatically' : ''), 1600);
-}
-function loadTargets(){
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
-    const saved = JSON.parse(raw);
-    PEOPLE.forEach(p => {
-      const arr = saved[p.name];
-      if (Array.isArray(arr) && arr.length === p.tgt.length)
-        p.tgt = arr.map(v => { const c = clampLvl(v); return c === null ? 0 : c; });
-    });
-  } catch(e) { /* storage unavailable — fall back to defaults */ }
-}
-function saveTargets(){
-  const obj = {};
-  PEOPLE.forEach(p => obj[p.name] = p.tgt.slice());
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); flashSaved(); }
-  catch(e) { setSaveStatus('⚠ Can’t save in this browser — use Export backup', true); }
-}
-function resetTargets(){
-  PEOPLE.forEach(p => p.tgt = DEFAULT_TGT[p.name].slice());
-  try { localStorage.removeItem(STORE_KEY); } catch(e) {}
-  renderMatrix();
-  if (personSelect.value !== '') renderAssess(personSelect.value);
-  setSaveStatus('Reset to defaults ✓');
-}
-loadTargets();
 
 // =========== RESOURCES TABLE ===========
 const RESOURCES = [
@@ -1021,83 +973,6 @@ CATS.forEach(c => {
   skillsByCat.appendChild(block);
 });
 
-// =========== RENDER: MATRIX ===========
-const matrixTable = document.getElementById('matrix-table');
-let editMode = false;
-
-// Build header once
-(function buildMatrixHead(){
-  const thead = document.createElement('thead');
-  const headTr = document.createElement('tr');
-  headTr.innerHTML = `<th class="role-col">Person</th><th class="tier-col">Tier</th>`;
-  SKILLS.forEach(s => {
-    const th = document.createElement('th');
-    th.className = 'skill-col';
-    th.innerHTML = `${s.code}<span class="tip">${s.name}</span>`;
-    headTr.appendChild(th);
-  });
-  thead.appendChild(headTr);
-  matrixTable.appendChild(thead);
-})();
-
-const matrixBody = document.createElement('tbody');
-matrixTable.appendChild(matrixBody);
-
-function renderMatrix(){
-  matrixTable.classList.toggle('editing', editMode);
-  matrixBody.innerHTML = '';
-  let curFn = null;
-  PEOPLE.forEach((p, pi) => {
-    if (p.fn !== curFn) {
-      const fnRow = document.createElement('tr');
-      fnRow.className = 'fn-row';
-      const td = document.createElement('td');
-      td.colSpan = 2 + SKILLS.length;
-      td.textContent = p.fn;
-      fnRow.appendChild(td);
-      matrixBody.appendChild(fnRow);
-      curFn = p.fn;
-    }
-    const tr = document.createElement('tr');
-    let html = `<td class="role-col">${p.name}<small>${p.role}</small></td>`;
-    html += `<td><span class="tier-pill ${p.tier.toLowerCase()}">${p.tier}</span></td>`;
-    p.tgt.forEach((lvl, si) => {
-      if (editMode) {
-        html += `<td class="lvl"><input type="number" min="0" max="4" class="mlvl-input lvl-${lvl}" data-p="${pi}" data-s="${si}" value="${lvl}"></td>`;
-      } else {
-        html += `<td class="lvl lvl-${lvl}">${lvl}</td>`;
-      }
-    });
-    tr.innerHTML = html;
-    matrixBody.appendChild(tr);
-  });
-  if (editMode) {
-    matrixBody.querySelectorAll('.mlvl-input').forEach(inp => inp.addEventListener('input', onTargetEdit));
-  }
-}
-
-function onTargetEdit(e){
-  const inp = e.target;
-  const v = clampLvl(inp.value);
-  if (v === null) return;
-  inp.value = v;
-  const pi = +inp.dataset.p, si = +inp.dataset.s;
-  PEOPLE[pi].tgt[si] = v;
-  inp.className = 'mlvl-input lvl-' + v;
-  saveTargets();
-  // keep self-assessment in sync if this person is open, without wiping entered scores
-  if (personSelect.value !== '' && +personSelect.value === pi) {
-    const numInp = tableWrap.querySelector(`.level-input[data-idx="${si}"]`);
-    if (numInp) {
-      const badge = numInp.closest('tr').querySelector('.req-badge');
-      if (badge) { badge.className = 'req-badge lvl-' + v; badge.textContent = v; }
-      updateGaps(pi);
-    }
-  }
-}
-
-renderMatrix();
-
 // =========== RENDER: TIER QUALIFICATION MATRIX ===========
 // Minimum level (0–3) on each skill to qualify for each tier. Monotonic: each tier >= the one below.
 // Order: A1 A2 A3 A4 A5 A6 | B1 B2 B3 B4 | C1 C2 | D1 D2 D3 | E1 E2 | F1
@@ -1131,63 +1006,6 @@ const TIER_QUAL = [
   });
   tbl.appendChild(tb);
 })();
-
-// ----- Edit-bar controls -----
-const editToggleBtn = document.getElementById('edit-toggle');
-const editHint = document.getElementById('edit-hint');
-editToggleBtn.addEventListener('click', () => {
-  editMode = !editMode;
-  editToggleBtn.textContent = editMode ? '✓ Done editing' : '✎ Edit targets';
-  editToggleBtn.classList.toggle('secondary', editMode);
-  editHint.style.display = editMode ? 'block' : 'none';
-  renderMatrix();
-  setSaveStatus(editMode ? 'Editing — changes save automatically' : '');
-});
-
-document.getElementById('export-targets').addEventListener('click', () => {
-  const obj = {};
-  PEOPLE.forEach(p => obj[p.name] = p.tgt.slice());
-  const payload = { app: 'AI Skills Matrix', version: 1, savedAt: new Date().toISOString(), targets: obj };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ai-skills-targets-backup.json';
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(a.href);
-  setSaveStatus('Backup downloaded ✓');
-});
-
-document.getElementById('import-targets').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result);
-      const t = data.targets || data;
-      let applied = 0;
-      PEOPLE.forEach(p => {
-        const arr = t[p.name];
-        if (Array.isArray(arr) && arr.length === p.tgt.length) {
-          p.tgt = arr.map(v => { const c = clampLvl(v); return c === null ? 0 : c; });
-          applied++;
-        }
-      });
-      if (applied === 0) { setSaveStatus('⚠ No matching names in file', true); return; }
-      saveTargets();
-      renderMatrix();
-      if (personSelect.value !== '') renderAssess(personSelect.value);
-      setSaveStatus(`Imported ${applied} people ✓`);
-    } catch(err) { setSaveStatus('⚠ Invalid backup file', true); }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-});
-
-document.getElementById('reset-targets').addEventListener('click', () => {
-  if (!confirm('Reset all target levels to the original defaults? This clears your saved changes in this browser.')) return;
-  resetTargets();
-});
 
 // =========== SELF-ASSESSMENT ===========
 const personSelect = document.getElementById('assess-person');
