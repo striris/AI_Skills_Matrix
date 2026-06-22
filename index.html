@@ -200,6 +200,24 @@
     color: var(--ink);
   }
   .section-intro { color: var(--ink-soft); margin-bottom: 32px; max-width: 800px; }
+  .action-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .action-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px;
+    border-top: 3px solid var(--green-500);
+  }
+  .action-card h3 { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .action-card p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .action-card .meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-600); margin-bottom: 8px; }
+  .action-card .note { margin-top: 10px; font-size: 12px; color: var(--ink-faint); }
+  .action-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .action-links a, .action-links button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: var(--sans); font-size: 13px; font-weight: 500; padding: 9px 14px;
+    border-radius: 6px; border: 1px solid var(--green-700); background: var(--green-700); color: #fff;
+    cursor: pointer; text-decoration: none;
+  }
+  .action-links a.secondary, .action-links button.secondary { background: #fff; color: var(--green-700); }
+  .action-links a.disabled, .action-links button.disabled { background: var(--line-soft); color: var(--ink-faint); border-color: var(--line); cursor: not-allowed; }
 
   /* -------- TIER GRID -------- */
   .tier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -449,7 +467,7 @@
     .page { padding: 32px 20px 64px; }
     .masthead { grid-template-columns: 1fr; }
     h1.title { font-size: 32px; }
-    .tier-grid, .skills-grid, .path-grid, .train-grid, .tool-grid { grid-template-columns: 1fr; }
+    .tier-grid, .skills-grid, .path-grid, .train-grid, .tool-grid, .action-grid { grid-template-columns: 1fr; }
     .assess-controls { grid-template-columns: 1fr; }
   }
   @media print {
@@ -467,13 +485,14 @@
     <div>
       <div class="eyebrow">AI Enablement Program</div>
       <h1 class="title">Wilmar <em>AI Hub</em></h1>
-      <p class="lede">One home for our AI journey — a skills matrix to map and grow what you can do, a tools matrix to pick the right tool for each task, and a training calendar for the sessions ahead.</p>
+      <p class="lede">One home for our AI journey — a skills matrix to map and grow what you can do, a tools matrix to pick the right tool for each task, a training calendar for the sessions ahead, and an Ideation Center for colleague projects and ideas.</p>
     </div>
     <aside class="source-card">
       <strong>What's inside</strong>
       1 · <b>AI Skills Matrix</b> — tiers, skills, your gaps &amp; learning paths.<br>
       2 · <b>AI Tools Matrix</b> — which tool to use for what.<br>
       3 · <b>Training Calendar</b> — upcoming sessions.
+      4 · <b>Ideation Center</b> — projects, ideas &amp; planning.
     </aside>
   </header>
 
@@ -483,6 +502,7 @@
     <button class="hub-tab" data-view="tools"><span class="tab-num">02</span> AI Tools Matrix</button>
     <button class="hub-tab" data-view="calendar"><span class="tab-num">03</span> AI Training Calendar</button>
     <button class="hub-tab" data-view="cafe"><span class="tab-num">04</span> Wilmar AI Cafe</button>
+    <button class="hub-tab" data-view="ideation"><span class="tab-num">05</span> Ideation Center</button>
   </div>
 
   <!-- ============================================================ -->
@@ -715,18 +735,61 @@
   <div class="view" id="view-cafe">
     <section style="margin-bottom:48px">
       <div class="section-header"><span class="section-num">A</span><h2>Wilmar AI Cafe</h2></div>
-      <p class="section-intro">A companion space for prompts, ideas and practical AI examples.</p>
+      <p class="section-intro">A beginner-friendly, hands-on learning series for building practical Analytics, Automation, and AI capability together. Come to build, experiment, or simply listen and see what AI can do for your everyday work.</p>
       <div class="how-to" style="max-width:780px;margin-bottom:0">
-        <h3>Open the cafe</h3>
+        <h3>Open the cafe menu</h3>
         <p style="font-size:14px;color:var(--ink-soft)">Visit the Wilmar AI Cafe for the companion hub:</p>
         <p style="margin-top:10px"><a href="https://striris.github.io/Wilmar-AI-Cafe/" target="_blank" rel="noopener" style="color:var(--green-600);border-bottom:1px dotted var(--green-300);text-decoration:none">https://striris.github.io/Wilmar-AI-Cafe/</a></p>
       </div>
     </section>
   </div><!-- /view-cafe -->
 
+  <!-- ============================================================ -->
+  <!-- ================= VIEW 5: IDEATION ====================== -->
+  <!-- ============================================================ -->
+  <div class="view" id="view-ideation">
+    <section style="margin-bottom:48px">
+      <div class="section-header"><span class="section-num">A</span><h2>Ideation Center</h2></div>
+      <p class="section-intro">A place to showcase automation and AI projects colleagues have already built, collect new ideas through a Microsoft Form, and book time with Xinran to discuss what to plan first. Projects should be planned and prioritised before work starts.</p>
+
+      <div class="action-grid" style="margin-bottom:18px">
+        <div class="action-card">
+          <div class="meta">Showcase</div>
+          <h3>What we have built</h3>
+          <p>Use this space to highlight automation scripts, dashboards, copilots, agents and other useful AI projects that others can learn from.</p>
+          <div class="note">Add project title, owner, problem solved, tools used and a short outcome summary.</div>
+        </div>
+        <div class="action-card">
+          <div class="meta">Idea intake</div>
+          <h3>Submit a project idea</h3>
+          <p>Collect new ideas through a Microsoft Form so they can be reviewed, scoped and prioritised before any build starts.</p>
+          <div class="action-links">
+            <a class="disabled" href="#" aria-disabled="true">Microsoft Form link coming soon</a>
+          </div>
+          <div class="note">Replace this placeholder with your form link later.</div>
+        </div>
+        <div class="action-card">
+          <div class="meta">Planning</div>
+          <h3>Book time with Xinran</h3>
+          <p>Use a short discussion to brainstorm and validate the idea, confirm effort and resources needed.</p>
+          <div class="action-links">
+            <a href="mailto:xinran.liu@sg.wilmar-intl.com?subject=Ideation%20Center%20discussion&body=Hi%20Xinran%2C%0A%0AI%20would%20like%20to%20book%20a%20time%20to%20discuss%20an%20idea.%20Please%20let%20me%20know%20a%20suitable%20slot.%0A%0AThanks">Email Xinran to book time</a>
+          </div>
+          <div class="note">Projects should be planned and prioritised before work begins.</div>
+        </div>
+      </div>
+
+      <div class="action-card" style="margin-top:18px">
+        <div class="meta">Project brief</div>
+        <h3>What to include in every idea submission</h3>
+        <p>Problem statement, expected users, data or systems involved, estimated effort, dependencies, risk level and how success will be measured.</p>
+      </div>
+    </section>
+  </div><!-- /view-ideation -->
+
   <footer>
     <span>Wilmar AI Hub · prepared for team upskilling</span>
-    <span>Levels 0–4 · Resources verified Jun 2026</span>
+    <span>Resources verified Jun 2026</span>
   </footer>
 
 </div>
@@ -786,9 +849,6 @@ const CATS = [
 const SKILLS = [];
 CATS.forEach(c => c.skills.forEach(s => SKILLS.push({...s, cat:c.code, catName:c.name})));
 const SKILL_KEYS = SKILLS.map(s => s.code);
-
-// =========== TIER TARGETS ==========
-const TIER_TARGETS = Object.fromEntries(TIER_QUAL.map(t => [t.code, t.lvl]));
 
 // =========== TARGET PERSISTENCE (saves edits in this browser) ===========
 function clampLvl(v){ v = parseInt(v,10); if (isNaN(v)) return null; return Math.max(0, Math.min(4, v)); }
@@ -1029,6 +1089,9 @@ const TIER_QUAL = [
   });
   tbl.appendChild(tb);
 })();
+
+// =========== TIER TARGETS ==========
+const TIER_TARGETS = Object.fromEntries(TIER_QUAL.map(t => [t.code, t.lvl]));
 
 // =========== SELF-ASSESSMENT ===========
 const nameInput = document.getElementById('assess-name');
@@ -1441,7 +1504,8 @@ const views = {
   skills: document.getElementById('view-skills'),
   tools: document.getElementById('view-tools'),
   calendar: document.getElementById('view-calendar'),
-  cafe: document.getElementById('view-cafe')
+  cafe: document.getElementById('view-cafe'),
+  ideation: document.getElementById('view-ideation')
 };
 function showView(name){
   Object.entries(views).forEach(([k, el]) => el.classList.toggle('active', k === name));
